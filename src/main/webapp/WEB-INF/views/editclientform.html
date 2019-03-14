@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="root_layout">
+
+<head>
+<title>Add client</title>
+</head>
+
+<section class="content" layout:fragment="page-content">
+	<div class="container-fluid">
+		<div class="alert bg-purple" th:switch="${clientforedit.client_type}">
+			<a th:href="@{/client/} + ${T(rs.sons.jwt.JwtHelper).createJWT(clientforedit.client_id)}" style="color: white;">
+				<span class="font-bold" th:case="true" th:text="${clientforedit.client_company}">Legal entity</span>
+				<span class="font-bold" th:case="false" th:text="${clientforedit.client_name} + ' ' + ${clientforedit.client_surname}">Natural person</span>
+			</a> <span class="font-bold"> | Edit client</span>
+			</div>
+		<div class="alert bg-green alert-dismissible" role="alert" th:if="${success} == true">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><i class="material-icons">close</i></span></button>
+			Client successfully edited
+		</div>
+		<!-- Basic Validation -->
+		<div class="row clearfix">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="card">
+					<div class="body">
+						<form action="#" th:object="${clientforedit}" th:action="@{/editclient}" method="post">
+							<input th:field="*{client_id}" type="hidden" />
+							<input th:field="*{client_jwt_helper}" type="hidden" />
+							<div class="form-group">
+								<span>Legal entity</span>
+								<select th:field="*{client_type}" class="form-control ">
+								    <option th:value="0" th:text="No"></option>
+								    <option th:value="1" th:text="Yes"></option>
+								</select>
+							</div>
+						
+							<div class="form-group form-float">
+								<div class="form-line">
+									<!-- <input type="text" class="form-control" name="name" required> -->
+									<input type="text" th:field="*{client_name}" class="form-control" required/>
+									<label class="form-label">Name</label>
+								</div>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('client_name')}" th:errors="*{client_name}">Name error</div>
+							
+							<div class="form-group form-float">
+								<div class="form-line">
+									<!-- <input type="text" class="form-control" name="surname" required> -->
+									<input type="text" th:field="*{client_surname}" class="form-control" required/>
+									<label class="form-label">Surname</label>
+								</div>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('client_surname')}" th:errors="*{client_surname}">Surname error</div>
+							
+							<div class="form-group form-float">
+								<div class="form-line">
+									<input type="text" th:field="*{client_phone}" class="form-control" required/>
+									<label class="form-label">Phone</label>
+								</div>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('client_phone')}" th:errors="*{client_phone}">Phone error</div>
+							
+							<div class="form-group form-float">
+								<div class="form-line">
+									<input type="text" th:field="*{client_company}" class="form-control" readonly="readonly" required/>
+									<label class="form-label">Company</label>
+								</div>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('client_company')}" th:errors="*{client_company}">Company error</div>
+							
+							<div class="form-group form-float">
+								<div class="form-line">
+									<input type="text" th:field="*{client_pib}" class="form-control" readonly="readonly" required/>
+									<label class="form-label">PIB</label>
+								</div>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('client_pib')}" th:errors="*{client_pib}">PIB error</div>
+							
+							<div class="form-group form-float">
+								<div class="form-line">
+									<input type="text" th:field="*{client_identification_number}" class="form-control" readonly="readonly" required/>
+									<label class="form-label">Identification number</label>
+								</div>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('client_identification_number')}" th:errors="*{client_identification_number}">Identification number error</div>
+							
+							<div class="form-group form-float">
+								<div class="form-line">
+									<input type="text" th:field="*{client_web_site}" class="form-control" required/>
+									<label class="form-label">Web site</label>
+								</div>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('client_web_site')}" th:errors="*{client_web_site}">Web site error</div>
+							
+							<div class="form-group form-float">
+								<div class="form-line">
+									<input type="text" th:field="*{client_email}" class="form-control" required/>
+									<label class="form-label">Email</label>
+								</div>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('client_email')}" th:errors="*{client_email}">Email error</div>
+							
+							<div class="form-group form-float">
+								<div class="form-line">
+									<input type="text" th:field="*{client_address_street}" class="form-control" required/>
+									<label class="form-label">Street</label>
+								</div>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('client_address_street')}" th:errors="*{client_address_street}">Street error</div>
+							
+							<div class="form-group form-float">
+								<div class="form-line">
+									<input type="text" th:field="*{client_address_city}" class="form-control" required/>
+									<label class="form-label">City</label>
+								</div>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('client_address_city')}" th:errors="*{client_address_city}">City error</div>
+							
+							<div class="form-group form-float">
+								<div class="form-line">
+									<input type="text" th:field="*{client_address_zip}" class="form-control" required/>
+									<label class="form-label">Zip code</label>
+								</div>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('client_address_zip')}" th:errors="*{client_address_zip}">Zip error</div>
+							
+							<div class="form-group">
+								<!-- <select class="form-control show-tick" th:field="*{country.country_id}"> -->
+								<select class="form-control" name="country.country_id" id="country.country_id">
+									<option th:each="country : ${countries}" th:value="${country.country_id}" th:text="${country.country_name}" th:selected="${country.isSelected(lastselectedcountry)}"></option>
+								</select>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('country.country_id')}" th:errors="*{country.country_id}">Country error</div>
+							
+							<button class="btn btn-primary waves-effect" type="submit">SUBMIT</button>
+							<!-- <button class="btn btn-danger waves-effect" type="button" id="client_reset_button">RESET</button> -->
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+</html>

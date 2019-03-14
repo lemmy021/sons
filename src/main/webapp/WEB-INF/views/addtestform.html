@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="root_layout">
+
+<head>
+<title>Add user</title>
+</head>
+
+<section class="content" layout:fragment="page-content">
+	<div class="container-fluid">
+		<div class="block-header">
+			<h2>
+				ADD NEW USER
+			</h2>
+		</div>
+		<div class="alert bg-green alert-dismissible" role="alert" th:if="${success} == true">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><i class="material-icons">close</i></span></button>
+			New user has been successfully created
+		</div>
+		<!-- Basic Validation -->
+		<div class="row clearfix">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="card">
+					<div class="body">
+						<!-- <form id="form_validation" method="POST"> -->
+						<form action="#" th:object="${test}" th:action="@{/addtest}" method="post">
+							<div class="form-group form-float">
+								<div class="form-line">
+									<!-- <input type="text" class="form-control" name="name" required> -->
+									<input type="text" th:field="*{test_name}" class="form-control" required/>
+									<label class="form-label">Name</label>
+									<!-- <td th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</td> -->
+								</div>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('test_name')}" th:errors="*{test_name}">greska</div>
+							
+							<div class="form-group form-float">
+								<div class="form-line">
+									<!-- <input type="text" class="form-control" name="surname" required> -->
+									<input type="text" th:field="*{test_phone}" class="form-control" required/>
+									<label class="form-label">Surname</label>
+								</div>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('test_phone')}" th:errors="*{test_phone}">greska</div>
+							<button class="btn btn-primary waves-effect" type="submit">SUBMIT</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- #END# Basic Validation -->
+	</div>
+</section>
+
+</html>

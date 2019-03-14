@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="root_layout">
+
+<head>
+<title>Add user</title>
+</head>
+
+<section class="content" layout:fragment="page-content">
+	<div class="container-fluid">
+		<div class="block-header">
+			<h2>
+				EDIT USER
+			</h2>
+		</div>
+		<div class="alert bg-green alert-dismissible" role="alert" th:if="${success} == true">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><i class="material-icons">close</i></span></button>
+			User edited
+		</div>
+		<!-- Basic Validation -->
+		<div class="row clearfix">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="card">
+					<div class="body">
+						<form action="#" th:object="${user}" th:action="@{/edituser}" method="post">
+						<input th:field="*{user_id}" type="hidden" />
+						<input th:field="*{user_jwt_helper}" type="hidden" />
+							<div class="form-group form-float">
+								<div class="form-line">
+									<!-- <input type="text" class="form-control" name="name" required> -->
+									<input type="text" th:field="*{user_name}" class="form-control" required/>
+									<label class="form-label">Name</label>
+								</div>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('user_name')}" th:errors="*{user_name}">Name error</div>
+							
+							<div class="form-group form-float">
+								<div class="form-line">
+									<!-- <input type="text" class="form-control" name="surname" required> -->
+									<input type="text" th:field="*{user_surname}" class="form-control" required/>
+									<label class="form-label">Surname</label>
+								</div>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('user_surname')}" th:errors="*{user_surname}">Surname error</div>
+							
+							<!-- <div class="form-group">
+								<span th:each="gender : ${allGenders}">
+									<input type="radio" th:field="*{gender.gender_id}" th:value="${gender.key}" class="with-gap" th:checked="${gender.key}"/>
+									<label th:for="${#ids.prev('gender.gender_id')}" th:text="${gender.value}"></label>
+								</span>
+							</div> -->
+							
+							<div class="form-group">
+                                    <select class="form-control show-tick" th:field="*{gender.gender_id}" title="-- Select user gender --">
+                                        <option th:each="genders : ${allGenders}" 
+										  th:value="${genders.key}" 
+										  th:text="${genders.value}" th:selected="${true}"/>
+                                    </select>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('gender.gender_id')}" th:errors="*{gender.gender_id}">Gender error</div>
+							
+							<div class="form-group form-float">
+								<div class="form-line">
+									<!-- <input type="text" class="form-control" name="City" required> -->
+									<input type="text" th:field="*{user_address_city}" class="form-control" required/>
+									<label class="form-label">City</label>
+								</div>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('user_address_city')}" th:errors="*{user_address_city}">City error</div>
+							
+							<div class="form-group form-float">
+								<div class="form-line">
+									<!-- <input type="text" class="form-control" name="street" required> -->
+									<input type="text" th:field="*{user_address_street}" class="form-control" required/>
+									<label class="form-label">Street</label>
+								</div>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('user_address_street')}" th:errors="*{user_address_street}">Street error</div>
+							
+							<div class="form-group form-float">
+								<div class="form-line">
+									<input type="text" th:field="*{user_phone}" class="form-control" required/>
+									<label class="form-label">Phone</label>
+								</div>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('user_phone')}" th:errors="*{user_phone}">Phone error</div>
+							
+							<div class="form-group form-float">
+								<div class="form-line">
+									<input type="text" th:field="*{user_email}" class="form-control" required/>
+									<label class="form-label">Email</label>
+								</div>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('user_email')}" th:errors="*{user_email}">Email error</div>
+							
+							<div class="form-group form-float">
+								<div class="form-line">
+									<input type="text" th:field="*{user_username}" class="form-control" readonly="readonly"/>
+									<label class="form-label">Username</label>
+								</div>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('user_username')}" th:errors="*{user_username}">Username error</div>
+							
+							<div class="form-group form-float">
+								<div class="form-line">
+									<input type="password" th:field="*{user_password}" class="form-control" required/>
+									<label class="form-label">Password</label>
+								</div>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('user_password')}" th:errors="*{user_password}">error</div>
+							
+							<div class="form-group">
+                                    <select class="form-control show-tick" th:field="*{role.role_id}" title="-- Select user role --">
+                                        <!-- <option value="">-- Please select role --</option> -->
+                                        <option th:each="role : ${roles}" 
+										  th:value="${role.key}" 
+										  th:text="${role.value}" />
+                                    </select>
+							</div>
+							<div class="form-group form-float" th:if="${#fields.hasErrors('role.role_id')}" th:errors="*{role.role_id}">error</div>
+							
+							<div class="form-group">
+								<input type="radio" th:field="*{user_enabled}" th:value="true" class="with-gap" />
+								<label th:for="${#ids.prev('user_enabled')}">Active</label>
+
+								<input type="radio" th:field="*{user_enabled}" th:value="false" class="with-gap" />
+								<label th:for="${#ids.prev('user_enabled')}" class="m-l-20">Disabled</label>
+							</div>
+							<button class="btn btn-primary waves-effect" type="submit">SUBMIT</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- #END# Basic Validation -->
+	</div>
+</section>
+
+</html>

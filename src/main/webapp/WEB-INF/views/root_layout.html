@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" 
+				xmlns:th="http://www.thymeleaf.org" 
+				xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Sons</title>
+    <!-- Favicon-->
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link th:href="@{/resources/css/google-font.css}" href="/resources/css/google-font.css"  rel="stylesheet" type="text/css"  />
+
+    <!-- Bootstrap Core Css -->
+    <link th:href="@{/resources/css/bootstrap.css}" href="/resources/css/bootstrap.css"  rel="stylesheet" type="text/css"  />
+
+    <!-- Waves Effect Css -->
+    <link th:href="@{/resources/css/waves.css}" href="/resources/css/waves.css"  rel="stylesheet" type="text/css"  />
+
+    <!-- Animation Css -->
+    <link th:href="@{/resources/css/animate.css}" href="/resources/css/animate.css"  rel="stylesheet" type="text/css"  />
+
+    <!-- JQuery DataTable Css -->
+    <link th:href="@{/resources/css/dataTables.bootstrap.css}" href="/resources/css/dataTables.bootstrap.css"  rel="stylesheet" type="text/css"  />
+
+	<!-- Bootstrap Select Css -->
+	<link th:href="@{/resources/css/bootstrap-select.css}" href="/resources/css/bootstrap-select.css"  rel="stylesheet" type="text/css"  />
+	
+	<!-- Custom Css -->
+    <link th:href="@{/resources/css/sweetalert.css}" href="/resources/css/style.css"  rel="stylesheet" type="text/css"  />
+
+    <!-- Custom Css -->
+    <link th:href="@{/resources/css/style.css}" href="/resources/css/sweetalert.css"  rel="stylesheet" type="text/css"  />
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link th:href="@{/resources/css/all-themes.css}" href="/resources/css/all-themes.css"  rel="stylesheet" type="text/css"  />
+</head>
+
+<body class="theme-red">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <div class="search-icon">
+            <i class="material-icons">search</i>
+        </div>
+        <input type="text" placeholder="START TYPING...">
+        <div class="close-search">
+            <i class="material-icons">close</i>
+        </div>
+    </div>
+    <!-- #END# Search Bar -->
+    <!-- Top Bar -->
+    <nav class="navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
+                <a href="javascript:void(0);" class="bars"></a>
+                <a class="navbar-brand" href="../../index.html">ADMINBSB - MATERIAL DESIGN</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <!-- Call Search -->
+                    <li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="material-icons">search</i></a></li>
+                    <!-- #END# Call Search -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- #Top Bar -->
+    <section>
+        <!-- Left Sidebar -->
+        <aside id="leftsidebar" class="sidebar">
+            <!-- User Info -->
+            <div class="user-info">
+                <div class="image" th:switch="${session.user_gender_name}">
+                    <img th:case="male" th:src="@{/resources/images/male.png}" width="48" height="48" alt="User" />
+                    <img th:case="female" th:src="@{/resources/images/female.png}" width="48" height="48" alt="User" />
+                </div>
+                <div class="info-container">
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span th:text="${session.user_name_surname}" th:unless="${session == null}"/></div>
+                    <div class="email"><span th:text="${session.user_email}" th:unless="${session == null}"/></div>
+                    <div class="btn-group user-helper-dropdown">
+                        <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a href="javascript:void(0);"><i class="material-icons">person</i>Profile</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="/logout"><i class="material-icons">input</i>Sign Out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- #User Info -->
+            <!-- Menu -->
+            <div class="menu">
+                <ul class="list">
+                    <li class="header">MAIN NAVIGATION</li>
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">people</i>
+                            <span>Users</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="/adduser">Add user</a>
+                            </li>
+                            <li>
+                                <a href="/index">List of users</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="active">
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">people_outline</i>
+                            <span>Clients</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li class="active">
+                                <a href="/addclient">Add client</a>
+                            </li>
+                            <li>
+                                <a href="/clients">List of clients</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- #Menu -->
+            <!-- Footer -->
+            <div class="legal">
+                <div class="copyright">
+                    &copy; 2016 - 2017 <a href="javascript:void(0);">AdminBSB - Material Design</a>.
+                </div>
+                <div class="version">
+                    <b>Version: </b> 1.0.5
+                </div>
+            </div>
+            <!-- #Footer -->
+        </aside>
+        <!-- #END# Left Sidebar -->
+    </section>
+    
+    <section layout:fragment="page-content">999</section>
+
+
+    <!-- Jquery Core Js -->
+    <script th:src="@{/resources/js/jquery.min.js}"></script>
+
+    <!-- Bootstrap Core Js -->
+    <script th:src="@{/resources/js/bootstrap.js}"></script>
+
+    <!-- Select Plugin Js -->
+    <script th:src="@{/resources/js/bootstrap-select.js}"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script th:src="@{/resources/js/jquery.slimscroll.js}"></script>
+    
+    <!-- Jquery Validation Plugin Css -->
+    <script th:src="@{/resources/js/jquery.validate.js}"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script th:src="@{/resources/js/waves.js}"></script>
+
+    <!-- Jquery DataTable Plugin Js -->
+    <script th:src="@{/resources/js/jquery-datatable/jquery.dataTables.js}"></script>
+    <script th:src="@{/resources/js/jquery-datatable/dataTables.bootstrap.js}"></script>
+
+    <!-- Custom Js -->
+    <script th:src="@{/resources/js/admin.js}"></script>
+    <script th:src="@{/resources/js/form-validation.js}"></script>
+    <script th:src="@{/resources/js/jquery-datatable.js}"></script>
+    
+    <script th:src="@{/resources/js/sweetalert.min.js}"></script>
+    <script th:src="@{/resources/js/dialogs.js}"></script>
+
+    <!-- Demo Js -->
+    <script th:src="@{/resources/js/demo.js}"></script>
+    <script th:src="@{/resources/js/sons.js}"></script>
+</body>
+
+</html>

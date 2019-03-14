@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="root_layout">
+
+<head>
+	<title>Client card</title>
+</head>
+
+<section class="content" layout:fragment="page-content">
+	<div class="container-fluid">
+            <div class="alert bg-purple" th:switch="${client.client_type}">
+				<span class="font-bold" th:case="true" th:text="${client.client_company} + ' | ' + @{Client card}">Legal entity</span>
+				<span class="font-bold" th:case="false" th:text="${client.client_name} + ' ' + ${client.client_surname} + ' | ' + @{Client card}">Natural person</span>
+			</div>
+			<div class="alert bg-green alert-dismissible" role="alert" th:if="${clientedited} == true">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><i class="material-icons">close</i></span></button>
+				Client successfully edited
+			</div>
+            <div class="row clearfix">
+                <!-- Client data -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>
+                                CLIENT DATA
+                            </h2>
+                        </div>
+                        <div class="body table-responsive">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td class="font-bold" style="border-top: none;">Name</td>
+                                        <td style="border-top: none;"><span th:text="${client.client_name} + ' ' + ${client.client_surname}">Name</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">Address</td>
+                                        <td><span th:text="${client.client_address_street}">Street</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td><span th:text="${client.client_address_zip} + ' ' + ${client.client_address_city}">ZIP + City</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">Country</td>
+                                        <td><span th:text="${client.country.country_name}">Country</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">Email</td>
+                                        <td><span th:text="${client.client_email}">Email</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">Phone</td>
+                                        <td><span th:text="${client.client_phone}">Phone</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">Web site</td>
+                                        <td><span th:text="${client.client_web_site}">Web site</span></td>
+                                    </tr>
+                                    <tr class="purple-color-dark" th:if="${client.client_type}">
+                                        <td class="font-bold">Company data</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr class="purple-color" th:if="${client.client_type}">
+                                        <td class="font-bold">Company name</td>
+                                        <td><span th:text="${client.client_company}">Company name</span></td>
+                                    </tr>
+                                    <tr class="purple-color" th:if="${client.client_type}">
+                                        <td class="font-bold">PIB</td>
+                                        <td><span th:text="${client.client_pib}">Pib</span></td>
+                                    </tr>
+                                    <tr class="purple-color" th:if="${client.client_type}">
+                                        <td class="font-bold">Identification number</td>
+                                        <td><span th:text="${client.client_identification_number}">Identification number</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- #END# Client data -->
+                <!-- Actions -->
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>
+                                ACTIONS
+                            </h2>
+                        </div>
+                        <div class="body table-responsive">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td class="font-bold" style="border-top: none;"><a th:href="@{/editclient/} + ${T(rs.sons.jwt.JwtHelper).createJWT(client.client_id)}" class="action-client-link-color">Change client data</a></td>
+                                        <td style="border-top: none;">Change client data</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold"><a th:href="@{/workorder/} + ${T(rs.sons.jwt.JwtHelper).createJWT(client.client_id)}" class="action-client-link-color">Work orders</a></td>
+                                        <td>Work orders - creation and overview</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold"><a th:href="@{/invoice/} + ${T(rs.sons.jwt.JwtHelper).createJWT(client.client_id)}" class="action-client-link-color">Invoices</a></td>
+                                        <td>Invoices and pre-invoices</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold"><a th:href="@{/history/} + ${T(rs.sons.jwt.JwtHelper).createJWT(client.client_id)}" class="action-client-link-color">History</a></td>
+                                        <td>Enrolment and overview</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold"><a th:href="@{/sale/} + ${T(rs.sons.jwt.JwtHelper).createJWT(client.client_id)}" class="action-client-link-color">Sale</a></td>
+                                        <!-- <td class="font-bold"><a th:href="@{/sale}" class="action-client-link-color">Sale</a></td> -->
+                                        <td>Create pre-invoice</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- #END# Actions -->
+            </div>
+        </div>
+</section>
+
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="root_layout">
+
+<head>
+<title>List of users</title>
+</head>
+
+<section class="content" layout:fragment="page-content">
+	<div class="container-fluid">
+		<div class="block-header">
+			<h2>
+				CRM USERS <small>List of users and their roles</small>
+			</h2>
+		</div>
+		<div class="alert bg-green alert-dismissible" role="alert" th:if="${nouserforedit} == true">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><i class="material-icons">close</i></span></button>
+			User doesn't exist anymore !!!
+		</div>
+		<div class="row clearfix">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="card">
+					<div class="body">
+						<div class="table-responsive">
+							<table
+								class="table table-bordered table-striped table-hover js-basic-example dataTable">
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>Name</th>
+										<th>Surname</th>
+										<th>Username</th>
+										<th>Phone</th>
+										<th>Active</th>
+										<th>Role</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tfoot>
+									<tr>
+										<th>ID</th>
+										<th>Name</th>
+										<th>Surname</th>
+										<th>Username</th>
+										<th>Phone</th>
+										<th>Active</th>
+										<th>Role</th>
+										<th>Action</th>
+									</tr>
+								</tfoot>
+								<tbody>
+									<tr th:if="${users.isEmpty() or users==null }">
+										<td colspan="8">No data available in table</td>
+									</tr>
+									<tr th:each="user : ${users}">
+										<td><span th:text="${user.user_id}"> ID </span></td>
+										<td><span th:text="${user.user_name}"> Name </span></td>
+										<td><span th:text="${user.user_surname}"> Surname
+										</span></td>
+										<td><span th:text="${user.user_username}">
+												Username </span></td>
+										<td><span th:text="${user.user_phone}"> Phone </span></td>
+										<td th:switch="${user.user_enabled}"><span th:case="true">active</span>
+											<span th:case="false">disabled</span></td>
+										<td><span th:text="${user.role.role_name}"> Role </span></td>
+										<td>
+											<!-- <button type="button" class="btn bg-green waves-effect" th:onclick="window.location.href ='/showuser/[(${T(rs.sons.jwt.JwtHelper).createJWT(user.user_id)})]'">
+		                                    <i class="material-icons">person</i>
+		                                </button> -->
+											<div class="clearfix js-sweetalert">
+												<!-- <a class="btn btn-danger waves-effect" th:href="@{/deleteuser/} + ${T(rs.sons.jwt.JwtHelper).createJWT(user.user_id)}" th:id="'del_' + ${user.user_id}" data-type="confirm">
+				                                	<i class="material-icons">delete_forever</i>
+				                            	</a> -->
+												<button type="button" class="btn btn-danger waves-effect button-remove"	data-type="confirm"	th:id="${T(rs.sons.jwt.JwtHelper).createJWT(user.user_id)}">
+													<i class="material-icons">delete_forever</i>
+												</button>
+												<a class="btn btn-warning waves-effect"	th:href="@{/edituser/} + ${T(rs.sons.jwt.JwtHelper).createJWT(user.user_id)}">
+													<i class="material-icons">edit</i>
+												</a>
+												<!-- <a class="btn bg-green waves-effect" th:href="@{/showuser/} + ${T(rs.sons.jwt.JwtHelper).createJWT(user.user_id)}">
+													<i class="material-icons">person</i>
+												</a> -->
+												<button type="button" class="btn bg-cyan waves-effect button-modal" th:id="@{info_} + ${T(rs.sons.jwt.JwtHelper).createJWT(user.user_id)}">
+													<i class="material-icons">person</i>
+												</button>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+    <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content modal-col-cyan">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="defaultModalLabel">User details</h4>
+                        </div>
+                        <div class="modal-body" id="user-data">
+                            <div><b>Name:</b> <span id="modal_name">xxxx</span></div>
+		                    <div><b>Surname:</b> <span id="modal_surname">xxxx</span></div>
+		                    <div><b>Address:</b> <span id="modal_address">xxxx</span></div>
+		                    <div><b>City:</b> <span id="modal_city">xxxx</span></div>
+		                    <div><b>Phone:</b> <span id="modal_phone">xxxx</span></div>
+		                    <div><b>Email:</b> <span id="modal_email">xxxx</span></div>
+		                    <div><b>Role:</b> <span id="modal_role">xxxx</span></div>
+		                    <div><b>Gender:</b> <span id="modal_gender">xxxx</span></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+	
+</section>
+</html>

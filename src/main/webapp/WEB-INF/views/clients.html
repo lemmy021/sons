@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="root_layout">
+
+<head>
+<title>List of clients</title>
+</head>
+
+<section class="content" layout:fragment="page-content">
+	<div class="container-fluid">
+		<div class="block-header">
+			<h2>
+				CLIENTS <small>List of clients</small>
+			</h2>
+		</div>
+		<div class="alert bg-green alert-dismissible" role="alert" th:if="${noclient} == true">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><i class="material-icons">close</i></span></button>
+			Client doesn't exist anymore !!!
+		</div>
+		<div class="row clearfix">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="card">
+					<div class="body">
+						<div class="table-responsive">
+							<table
+								class="table table-bordered table-striped table-hover js-clients-table dataTable">
+								<thead>
+									<tr>
+										<th>Personal Name</th>
+										<th>Company</th>
+										<th>Phone</th>
+										<th>Email</th>
+										<th>Address</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tfoot>
+									<tr>
+										<th>Personal Name</th>
+										<th>Company</th>
+										<th>Phone</th>
+										<th>Email</th>
+										<th>Address</th>
+										<th>Action</th>
+									</tr>
+								</tfoot>
+								<tbody>
+									<tr th:if="${clients.isEmpty() or clients==null }">
+										<td colspan="6">No data available in table</td>
+									</tr>
+									<tr th:each="client : ${clients}">
+										<td><a href="#"><span th:text="${client.client_name} + ' ' + ${client.client_surname}"> Name-Surname </span></a></td>
+										<td><span th:text="${client.client_company}"> Company </span></td>
+										<td><span th:text="${client.client_phone}"> Phone </span></td>
+										<td><span th:text="${client.client_email}"> Email </span></td>
+										<td><span th:text="${client.client_address_street} + ', ' + ${client.client_address_zip} + ' ' + ${client.client_address_city} + ', ' + ${client.country.country_name}"> Address </span></td>
+										<td>
+											<!-- <button type="button" class="btn bg-purple waves-effect" th:href="@{/client/} + ${T(rs.sons.jwt.JwtHelper).createJWT(client.client_id)}">CLIENT CARD</button> -->
+											<a class="btn bg-purple waves-effect" th:href="@{/client/} + ${T(rs.sons.jwt.JwtHelper).createJWT(client.client_id)}">CLIENT CARD</a>
+											<button type="button" class="btn bg-red waves-effect button-remove" data-type="confirm" th:id="@{deleteclient__} + ${T(rs.sons.jwt.JwtHelper).createJWT(client.client_id)}">DELETE</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+</html>
