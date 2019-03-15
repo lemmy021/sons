@@ -52,7 +52,7 @@ public class Invoice {
 	@NotNull
 	@Column(length = Integer.MAX_VALUE)
 	@Lob
-	private String invoice_client_data;
+	private String invoice_client_data = "usluga";
 	
 	@NotNull
 	@Column(columnDefinition="DATETIME DEFAULT CURRENT_TIMESTAMP")

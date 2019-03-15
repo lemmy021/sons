@@ -33,7 +33,7 @@ public class InitDbService {
 	@Autowired
 	ClientDao clientDao;
 	
-	@PostConstruct
+	//@PostConstruct
 	private void init() {
 		Role role = new Role();
 		role.setRole_name("ROLE_ADMIN");

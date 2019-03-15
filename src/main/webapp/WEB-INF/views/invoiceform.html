@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="root_layout">
+
+<head>
+<title>Create preinvoice</title>
+</head>
+
+<section class="content" layout:fragment="page-content">
+	<div class="container-fluid">
+		<div class="block-header">
+			<h2>CREATE PRE-INVOICE</h2>
+		</div>
+		<div class="alert bg-green alert-dismissible" role="alert"
+			th:if="${success} == true">
+			<button type="button" class="close" data-dismiss="alert"
+				aria-label="Close">
+				<span aria-hidden="true"><i class="material-icons">close</i></span>
+			</button>
+			New user has been successfully created
+		</div>
+		<div class="row clearfix">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="card">
+					<div class="body">
+						<form action="#" th:action="@{/sale}" th:object="${invoice}" method="post" novalidate="novalidate">
+							<!-- <input type="text" th:field="*{invoice_client_data}"> -->
+
+							<fieldset id="items">
+								<div th:each="row, rowStat : *{invoiceItems}" class="form-group form-float">
+									<div th:if="${rowStat.index > 0}" class="col-sm-12">
+										<!-- <hr class="invoice-form-hr"> -->
+										<!-- <div style="width: 100%; height: 20px; border-bottom: 1px solid black; text-align: center">
+										    <span style="font-size: 40px; background-color: white; padding: 0 10px;">
+										    	Section Title Padding is optional
+										    </span>
+									    </div> -->
+									    <hr class="style-eight">
+									</div>
+									<div class="col-sm-12">
+										<div class="form-line">
+											<textarea rows="2" class="form-control no-resize" th:field="*{invoiceItems[__${rowStat.index}__].invoice_item_description}"></textarea>
+											<label class="form-label" th:for="|invoiceItems[${rowStat.index}].invoice_item_description|">Service</label>
+										</div>
+									</div>
+									<!-- <div class="form-group form-float" th:if="${#fields.hasErrors('items[__${rowStat.index}__].service')}" th:errors="*{items[__${rowStat.index}__].service}">Service error</div> -->
+									
+									<div class="col-sm-4">
+										<div class="form-line">
+											<input type="text" th:field="*{invoiceItems[__${rowStat.index}__].invoice_item_unit}" class="form-control" required />
+											<label class="form-label" th:for="|invoiceItems[${rowStat.index}].invoice_item_unit|">Unit</label>
+										</div>
+									</div>
+									<div class="col-sm-4">
+										<div class="form-line">
+											<input type="text" th:field="*{invoiceItems[__${rowStat.index}__].invoice_item_amount}" class="form-control" required />
+											<label class="form-label" th:for="|invoiceItems[${rowStat.index}].amount|">Amount</label>
+										</div>
+									</div>
+									<div class="col-sm-4">
+										<div class="form-line">
+											<input type="text" th:field="*{invoiceItems[__${rowStat.index}__].invoice_item_price}" class="form-control" required />
+											<label class="form-label" th:for="|invoiceItems[${rowStat.index}].invoice_item_price|">Price</label>
+										</div>
+									</div>
+									<div class="col-sm-12">
+										<button th:if="${rowStat.index > 0}" type="submit" name="removeItem" th:value="${rowStat.index}" class="btn btn-danger waves-effect my-float-right">Remove item</button>
+									</div>
+								</div>
+								<button class="btn btn-primary waves-effect" type="submit">SUBMIT</button>
+								<button class="btn btn-default waves-effect" type="submit" name="addItem">Add new item</button>
+							</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+</html>
