@@ -12,7 +12,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 //https://stackoverflow.com/questions/32196348/recommended-way-to-handle-thymeleaf-spring-mvc-ajax-forms-and-their-error-messag
 //https://vkuzel.com/add-or-remove-items-from-a-list-of-objects-in-a-model-attribute-using-spring-mvc-and-thymeleaf

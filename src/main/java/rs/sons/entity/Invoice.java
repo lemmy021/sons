@@ -3,6 +3,7 @@ package rs.sons.entity;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,11 +13,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import rs.sons.helper.MyDateFormatter;
 
 @Entity
 @Getter
@@ -54,21 +57,21 @@ public class Invoice {
 	@Lob
 	private String invoice_client_data = "usluga";
 	
-	@NotNull
+	//@NotNull
 	@Column(columnDefinition="DATETIME DEFAULT CURRENT_TIMESTAMP")
-	private Date invoice_creation_date;
+	private Date invoice_creation_date = MyDateFormatter.setCurrentDatetime();
 	
-	@NotNull
+	//@NotNull
 	@Column(columnDefinition="DATETIME DEFAULT '0000-00-00 00:00:00'")
-	private Date invoice_payment_deadline;
+	private Date invoice_payment_deadline = MyDateFormatter.setZeroDate();
 	
-	@NotNull
+	//@NotNull
 	@Column(columnDefinition="DATETIME DEFAULT '0000-00-00 00:00:00'")
-	private Date invoice_payment_date_real;
+	private Date invoice_payment_date_real = MyDateFormatter.setZeroDate();
 	
-	@NotNull
+	//@NotNull
 	@Column(columnDefinition="DATETIME DEFAULT '0000-00-00 00:00:00'")
-	private Date invoice_payment_date_for_print;
+	private Date invoice_payment_date_for_print = MyDateFormatter.setZeroDate();
 	
 	@NotNull
 	@Column(nullable = false, columnDefinition = "TINYINT NOT NULL DEFAULT '1'", length = 1)
@@ -79,30 +82,30 @@ public class Invoice {
 	private boolean invoice_is_invoice = false;
 	
 	//datum prometa
-	@NotNull
+	//@NotNull
 	@Column(columnDefinition="DATETIME DEFAULT '0000-00-00 00:00:00'")
-	private Date invoice_delivery_date;
+	private Date invoice_delivery_date = MyDateFormatter.setZeroDate();
 	
 	@NotNull
 	@Column(nullable = false, columnDefinition = "TINYINT NOT NULL DEFAULT '0'", length = 1)
 	private boolean invoice_payed;
 	
-	@NotNull
+	@Transient
+	private String invoice_client_id_jwt_helper;
+	
 	@ManyToOne()
 	@JoinColumn(name = "invoice_client_id", columnDefinition = "int default 0")
 	private Client client;
 	
-	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "invoice_created_by", columnDefinition = "int default 0")
 	private User user;
 	
-	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "invoice_payment_applied_by", columnDefinition = "int default 0")
 	private User userApplied;
 	
-	@OneToMany(mappedBy = "invoice")
+	@OneToMany(mappedBy = "invoice", cascade = CascadeType.PERSIST)
 	private List<InvoiceItem> invoiceItems;
 	
 }

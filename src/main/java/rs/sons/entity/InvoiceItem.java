@@ -14,6 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+//https://web.archive.org/web/20100201003834/http://notesonjava.wordpress.com/2008/11/03/managing-the-bidirectional-relationship/
+
 @Entity
 @Getter
 @Setter
@@ -44,7 +46,7 @@ public class InvoiceItem {
 	@Column(nullable = false, columnDefinition = "Decimal(14,2)")
 	private double invoice_item_amount;
 	
-	@ManyToOne
+	@ManyToOne()
 	@JoinColumn(name = "invoice_item_invoice_id")
 	private Invoice invoice;
 }
