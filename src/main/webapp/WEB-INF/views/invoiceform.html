@@ -11,9 +11,15 @@
 
 <section class="content" layout:fragment="page-content">
 	<div class="container-fluid">
-		<div class="block-header">
-			<h2>CREATE PRE-INVOICE</h2>
-		</div>
+		<!-- <div class="alert bg-purple" th:switch="${invoice.client.client_type}">
+			<a th:href="@{/client/} + ${T(rs.sons.jwt.JwtHelper).createJWT(invoice.client.client_id)}" style="color: white;">
+				<span class="font-bold" th:case="true" th:text="${invoice.client.client_company}">Legal entity</span>
+				<span class="font-bold" th:case="false" th:text="${invoice.client.client_name} + ' ' + ${invoice.client.client_surname}">Natural person</span>
+			</a> <span class="font-bold"> | Create pre-invoice</span>
+		</div> -->
+		<!-- <div>
+			<span th:text="${invoice.client.client_company}"></span>
+		</div> -->
 		<div class="alert bg-green alert-dismissible" role="alert"
 			th:if="${success} == true">
 			<button type="button" class="close" data-dismiss="alert"
@@ -32,12 +38,6 @@
 							<fieldset id="items">
 								<div th:each="row, rowStat : *{invoiceItems}" class="form-group form-float">
 									<div th:if="${rowStat.index > 0}" class="col-sm-12">
-										<!-- <hr class="invoice-form-hr"> -->
-										<!-- <div style="width: 100%; height: 20px; border-bottom: 1px solid black; text-align: center">
-										    <span style="font-size: 40px; background-color: white; padding: 0 10px;">
-										    	Section Title Padding is optional
-										    </span>
-									    </div> -->
 									    <hr class="style-eight">
 									</div>
 									<div class="col-sm-12">
@@ -46,7 +46,7 @@
 											<label class="form-label" th:for="|invoiceItems[${rowStat.index}].invoice_item_description|">Service</label>
 										</div>
 									</div>
-									<!-- <div class="form-group form-float" th:if="${#fields.hasErrors('items[__${rowStat.index}__].service')}" th:errors="*{items[__${rowStat.index}__].service}">Service error</div> -->
+									<div class="form-group form-float" th:if="${#fields.hasErrors('invoiceItems[__${rowStat.index}__].invoice_item_description')}" th:errors="*{items[__${rowStat.index}__].invoice_item_description}">Service error</div>
 									
 									<div class="col-sm-4">
 										<div class="form-line">
@@ -73,9 +73,9 @@
 								<button class="btn btn-primary waves-effect" type="submit">SUBMIT</button>
 								<button class="btn btn-default waves-effect" type="submit" name="addItem">Add new item</button>
 							</fieldset>
-							<ul th:if="${#fields.hasErrors('*')}">
+							<!-- <ul th:if="${#fields.hasErrors('*')}">
 								<li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
-							</ul>
+							</ul> -->
 						</form>
 					</div>
 				</div>

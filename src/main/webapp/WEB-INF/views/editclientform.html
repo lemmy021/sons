@@ -16,7 +16,7 @@
 				<span class="font-bold" th:case="true" th:text="${clientforedit.client_company}">Legal entity</span>
 				<span class="font-bold" th:case="false" th:text="${clientforedit.client_name} + ' ' + ${clientforedit.client_surname}">Natural person</span>
 			</a> <span class="font-bold"> | Edit client</span>
-			</div>
+		</div>
 		<div class="alert bg-green alert-dismissible" role="alert" th:if="${success} == true">
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><i class="material-icons">close</i></span></button>
 			Client successfully edited

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="root_layout">
+
+<head>
+<title>List of clients</title>
+</head>
+
+<section class="content" layout:fragment="page-content">
+	<div class="container-fluid">
+		<!-- <div class="alert bg-purple" th:switch="${client.client_type}">
+			<span class="font-bold" th:case="true" th:text="${client.client_company} + ' | ' + @{Client card}">Legal entity</span>
+			<span class="font-bold" th:case="false" th:text="${client.client_name} + ' ' + ${client.client_surname} + ' | ' + @{Client card}">Natural person</span>
+		</div> -->
+		<!-- <div class="alert bg-green alert-dismissible" role="alert" th:if="${noclient} == true">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><i class="material-icons">close</i></span></button>
+			Client doesn't exist anymore !!!
+		</div> -->
+		<div class="row clearfix">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="card">
+					<div class="body">
+						<div class="table-responsive">
+							<table
+								class="table table-bordered table-striped table-hover js-clients-table dataTable">
+								<thead>
+									<tr>
+										<th>Type</th>
+										<th>Items</th>
+										<th>Total</th>
+										<th>Date</th>
+										<th>Delivery date</th>
+										<th>Actions</th>
+									</tr>
+								</thead>
+								<tfoot>
+									<tr>
+										<th>Type</th>
+										<th>Items</th>
+										<th>Total</th>
+										<th>Date</th>
+										<th>Delivery date</th>
+										<th>Actions</th>
+									</tr>
+								</tfoot>
+								<tbody>
+									<tr th:if="${invoices.isEmpty() or invoices==null }">
+										<td colspan="6">No data available in table</td>
+									</tr>
+									<tr th:each="invoice : ${invoices}" style="font-size: 12px;">
+										<!-- <td th:switch="${invoice.invoice_is_invoice}">
+											<div th:switch="${invoice.invoice_is_invoice}">
+												<span th:case="true">Invoice</span>
+												<span th:case="false">Pre-invoice</span>
+											</div>
+											<div>10001/2019</div>
+											<div>
+												<span>Created by: </span>
+												<span th:text="${invoice.user.user_name} + ' ' + ${invoice.user.user_surname}">Created by</span>
+											</div>
+										</td> -->
+										
+										<td th:switch="${invoice.invoice_is_invoice}">
+												<div th:case="false">
+													<div>Pre-invoice</div>
+													<div th:text="${invoice.invoice_preinvoice_month + #numbers.formatDecimal(invoice.invoice_preinvoice_number,3,0) + '/' + invoice.invoice_preinvoice_year}">Preinvoice number</div>
+													<div>
+														<span>Created by: </span>
+														<span th:text="${invoice.user.user_name} + ' ' + ${invoice.user.user_surname}">Created by</span>
+													</div>
+												</div>
+												<div th:case="true">
+													<div>Pre-invoice</div>
+												</div>
+										</td>
+										
+										<!-- Invoice items -->
+										<td>
+											<div th:each="item, iterator : ${invoice.invoiceItems}">
+												<div>
+													<span th:text="${iterator.index+1} + '. ' +${item.invoice_item_description}"></span>
+												</div>
+											</div>
+										</td>
+										
+										<td th:text="${#numbers.formatDecimal(#aggregates.sum(invoice.invoiceItems.![invoice_item_price]), 1, 2, 'COMMA')} + ' din.'">Total</td>
+										<!-- <td><span th:text="${invoice.invoice_client_data}"> Company </span></td> -->
+										<td th:text="${#dates.format(invoice.invoice_creation_date, 'dd.MM.yyyy.')}" >Date</td>
+										<td th:text="${#dates.format(invoice.invoice_delivery_date, 'dd.MM.yyyy')}" >Delivery date</td>
+										
+										<td>
+											<div th:if="${invoice.invoice_delivery_date} != '1900-01-01 00:00:00'" th:text="${#dates.format(invoice.invoice_delivery_date, 'dd.MM.yyyy')}"></div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+</html>

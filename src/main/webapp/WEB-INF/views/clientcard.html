@@ -19,6 +19,10 @@
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><i class="material-icons">close</i></span></button>
 				Client successfully edited
 			</div>
+			<div class="alert bg-green alert-dismissible" role="alert" th:if="${preinvoice} == true">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><i class="material-icons">close</i></span></button>
+				Pre-invoice has been created successfully
+			</div>
             <div class="row clearfix">
                 <!-- Client data -->
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -97,11 +101,11 @@
                                         <td style="border-top: none;">Change client data</td>
                                     </tr>
                                     <tr>
-                                        <td class="font-bold"><a th:href="@{/workorder/} + ${T(rs.sons.jwt.JwtHelper).createJWT(client.client_id)}" class="action-client-link-color">Work orders</a></td>
+                                        <td class="font-bold"><a th:href="@{/workorders/} + ${T(rs.sons.jwt.JwtHelper).createJWT(client.client_id)}" class="action-client-link-color">Work orders</a></td>
                                         <td>Work orders - creation and overview</td>
                                     </tr>
                                     <tr>
-                                        <td class="font-bold"><a th:href="@{/invoice/} + ${T(rs.sons.jwt.JwtHelper).createJWT(client.client_id)}" class="action-client-link-color">Invoices</a></td>
+                                        <td class="font-bold"><a th:href="@{/invoices/} + ${T(rs.sons.jwt.JwtHelper).createJWT(client.client_id)}" class="action-client-link-color">Invoices</a></td>
                                         <td>Invoices and pre-invoices</td>
                                     </tr>
                                     <tr>

@@ -1,11 +1,13 @@
 package rs.sons.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,6 +23,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import rs.sons.helper.MyDateFormatter;
 
+/*
+resenje za foreigh key
+https://vladmihalcea.com/jpa-hibernate-synchronize-bidirectional-entity-associations/
+*/
+
 @Entity
 @Getter
 @Setter
@@ -29,7 +36,7 @@ public class Invoice {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int invoice_id;
+	private Long invoice_id;
 	
 	@NotNull
 	private Integer invoice_preinvoice_month = 0;
@@ -62,7 +69,7 @@ public class Invoice {
 	private Date invoice_creation_date = MyDateFormatter.setCurrentDatetime();
 	
 	//@NotNull
-	@Column(columnDefinition="DATETIME DEFAULT '0000-00-00 00:00:00'")
+	@Column(columnDefinition="DATE DEFAULT '0000-00-00'")
 	private Date invoice_payment_deadline = MyDateFormatter.setZeroDate();
 	
 	//@NotNull
@@ -73,9 +80,12 @@ public class Invoice {
 	@Column(columnDefinition="DATETIME DEFAULT '0000-00-00 00:00:00'")
 	private Date invoice_payment_date_for_print = MyDateFormatter.setZeroDate();
 	
-	@NotNull
-	@Column(nullable = false, columnDefinition = "TINYINT NOT NULL DEFAULT '1'", length = 1)
-	private boolean invoice_is_preinvoice = true;
+	/*
+	 * @NotNull
+	 * 
+	 * @Column(nullable = false, columnDefinition = "TINYINT NOT NULL DEFAULT '1'",
+	 * length = 1) private boolean invoice_is_preinvoice = true;
+	 */
 	
 	@NotNull
 	@Column(nullable = false, columnDefinition = "TINYINT NOT NULL DEFAULT '0'", length = 1)
@@ -93,7 +103,7 @@ public class Invoice {
 	@Transient
 	private String invoice_client_id_jwt_helper;
 	
-	@ManyToOne()
+	@ManyToOne
 	@JoinColumn(name = "invoice_client_id", columnDefinition = "int default 0")
 	private Client client;
 	
@@ -105,7 +115,16 @@ public class Invoice {
 	@JoinColumn(name = "invoice_payment_applied_by", columnDefinition = "int default 0")
 	private User userApplied;
 	
-	@OneToMany(mappedBy = "invoice", cascade = CascadeType.PERSIST)
-	private List<InvoiceItem> invoiceItems;
+	@OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	private List<InvoiceItem> invoiceItems = new ArrayList<InvoiceItem>();
 	
+	public void addInvoiceItem(InvoiceItem invoiceItem) {
+		invoiceItems.add(invoiceItem);
+		invoiceItem.setInvoice(this);
+	}
+	
+	public void removeInvoiceItem(InvoiceItem invoiceItem) {
+		invoiceItems.remove(invoiceItem);
+		invoiceItem.setInvoice(null);
+	}
 }
