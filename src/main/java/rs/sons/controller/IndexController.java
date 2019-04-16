@@ -199,16 +199,20 @@ public class IndexController extends HelperController {
 		return "redirect:/";
 	}
 	
-	@PostMapping(value = "/userdetails", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/userdetails" , produces = MediaType.APPLICATION_JSON_VALUE )
 	@ResponseBody
 	public User userDetails(@RequestParam("jwt_user_id") String jwtUserId) {
 		
-		//removing prefix "info_"
-		jwtUserId = jwtUserId.substring(5);
-		
-		Integer userId = JwtHelper.decodeJWT(jwtUserId);
-		
-		return userService.getUserById(userId);
+		  //removing prefix "info_" 
+		  jwtUserId = jwtUserId.substring(5);
+		  
+		  Integer userId = JwtHelper.decodeJWT(jwtUserId);
+		  
+		  User user = userService.getUserById(userId);
+		  
+		  return user;
+		 
+		//return Collections.singletonMap("response", "Hello World");
 	}
 	
 	private Map<Integer, String> getAllRoles() {

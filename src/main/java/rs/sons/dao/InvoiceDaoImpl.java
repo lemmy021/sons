@@ -4,11 +4,13 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
 
+import rs.sons.entity.Client;
 import rs.sons.entity.Invoice;
 
 @Repository(value = "invoiceDao")
@@ -72,6 +74,15 @@ public class InvoiceDaoImpl implements InvoiceDao {
 			return query.getSingleResult();
 		}
 		
+	}
+
+	@SuppressWarnings("unchecked")
+	public Invoice getInvoiceById(Long invoiceId) {
+		
+		Query query = em.createQuery("FROM Invoice WHERE invoice_id = :id");
+		query.setParameter("id", invoiceId);
+		
+		return (Invoice) query.getResultList().stream().findFirst().orElse(null);
 	}
 
 }

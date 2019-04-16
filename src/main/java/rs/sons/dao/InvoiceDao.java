@@ -11,4 +11,6 @@ public interface InvoiceDao {
 	public List<Invoice> getAllInvoicesForClient(Integer clientId);
 	
 	public int getDocumentNumber(String type, int year, int month);
+	
+	public Invoice getInvoiceById(Long invoiceId);
 }

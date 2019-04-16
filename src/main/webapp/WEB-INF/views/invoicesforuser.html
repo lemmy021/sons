@@ -11,10 +11,12 @@
 
 <section class="content" layout:fragment="page-content">
 	<div class="container-fluid">
-		<!-- <div class="alert bg-purple" th:switch="${client.client_type}">
-			<span class="font-bold" th:case="true" th:text="${client.client_company} + ' | ' + @{Client card}">Legal entity</span>
-			<span class="font-bold" th:case="false" th:text="${client.client_name} + ' ' + ${client.client_surname} + ' | ' + @{Client card}">Natural person</span>
-		</div> -->
+		<div class="alert bg-purple" th:switch="${client.client_type}">
+			<a th:href="@{/client/} + ${T(rs.sons.jwt.JwtHelper).createJWT(client.client_id)}" style="color: white;">
+				<span class="font-bold" th:case="true" th:text="${client.client_company}">Legal entity</span>
+				<span class="font-bold" th:case="false" th:text="${client.client_name} + ' ' + ${client.client_surname}">Natural person</span>
+			</a> <span class="font-bold"> | Invoices and pre-invoices</span>
+		</div>
 		<!-- <div class="alert bg-green alert-dismissible" role="alert" th:if="${noclient} == true">
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><i class="material-icons">close</i></span></button>
 			Client doesn't exist anymore !!!
@@ -73,7 +75,20 @@
 													</div>
 												</div>
 												<div th:case="true">
-													<div>Pre-invoice</div>
+													<div>Invoice</div>
+													<div th:text="${invoice.invoice_month + #numbers.formatDecimal(invoice.invoice_number,3,0) + '/' + invoice.invoice_year}">Invoice number</div>
+													<div th:switch="${invoice.invoice_payed}">
+														<div th:case="false" style="color:red;">Not paid</div>
+														<div th:case="true">Paid</div>
+													</div>
+													<div>
+														<span>Created by: </span>
+														<span th:text="${invoice.user.user_name} + ' ' + ${invoice.user.user_surname}">Created by</span>
+													</div>
+													<div>
+														<span>Applied by: </span>
+														<span th:text="${invoice.userApplied.user_name} + ' ' + ${invoice.userApplied.user_surname}">Applied by</span>
+													</div>
 												</div>
 										</td>
 										
@@ -87,12 +102,14 @@
 										</td>
 										
 										<td th:text="${#numbers.formatDecimal(#aggregates.sum(invoice.invoiceItems.![invoice_item_price]), 1, 2, 'COMMA')} + ' din.'">Total</td>
-										<!-- <td><span th:text="${invoice.invoice_client_data}"> Company </span></td> -->
 										<td th:text="${#dates.format(invoice.invoice_creation_date, 'dd.MM.yyyy.')}" >Date</td>
-										<td th:text="${#dates.format(invoice.invoice_delivery_date, 'dd.MM.yyyy')}" >Delivery date</td>
+										<td th:text="${#dates.format(invoice.invoice_delivery_date, 'dd.MM.yyyy.')}" th:classappend="${invoice.invoice_delivery_date} ? ima : nema " th:id="${invoice.invoice_id}">Delivery date</td>
 										
 										<td>
-											<div th:if="${invoice.invoice_delivery_date} != '1900-01-01 00:00:00'" th:text="${#dates.format(invoice.invoice_delivery_date, 'dd.MM.yyyy')}"></div>
+											<div style="color: #00bcd4"><a th:href="@{/invoicepdf/} + ${T(rs.sons.jwt.JwtHelper).createJWT(invoice.invoice_id)}">Print</a></div>
+											<div style="color: #00bcd4"><a th:href="@{/newpdf}">Send to emal</a></div>
+											<div style="color: #00bcd4"><a href="#">Applay payment</a></div>
+											<div style="color: #00bcd4"><a href="#">Delete</a></div>
 										</td>
 									</tr>
 								</tbody>

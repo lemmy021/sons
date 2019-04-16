@@ -16,6 +16,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -72,126 +74,21 @@ public class User {
 	@JoinColumn(name = "user_gender_id")
 	private Gender gender;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private List<Invoice> invoicesCreated;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "userApplied")
 	private List<Invoice> invoicesApplied;
 
-	/*public User() {
-		super();
-	}
-
-	public Integer getUser_id() {
-		return user_id;
-	}
-
-	public void setUser_id(Integer user_id) {
-		this.user_id = user_id;
-	}
-
-	public String getUser_username() {
-		return user_username;
-	}
-
-	public void setUser_username(String user_username) {
-		this.user_username = user_username;
-	}
-
-	public String getUser_password() {
-		return user_password;
-	}
-
-	public void setUser_password(String user_password) {
-		this.user_password = user_password;
-	}
-
-	public String getUser_email() {
-		return user_email;
-	}
-
-	public void setUser_email(String user_email) {
-		this.user_email = user_email;
-	}
-
-	public String getUser_name() {
-		return user_name;
-	}
-
-	public void setUser_name(String user_name) {
-		this.user_name = user_name;
-	}
-
-	public String getUser_surname() {
-		return user_surname;
-	}
-
-	public void setUser_surname(String user_surname) {
-		this.user_surname = user_surname;
-	}
-
-	public String getUser_address_street() {
-		return user_address_street;
-	}
-
-	public void setUser_address_street(String user_address_street) {
-		this.user_address_street = user_address_street;
-	}
-
-	public String getUser_address_city() {
-		return user_address_city;
-	}
-
-	public void setUser_address_city(String user_address_city) {
-		this.user_address_city = user_address_city;
-	}
-
-	public String getUser_phone() {
-		return user_phone;
-	}
-
-	public void setUser_phone(String user_phone) {
-		this.user_phone = user_phone;
-	}
-
-	public boolean isUser_enabled() {
-		return user_enabled;
-	}
-
-	public void setUser_enabled(boolean user_enabled) {
-		this.user_enabled = user_enabled;
-	}
-
-	public boolean isUser_deleted() {
-		return user_deleted;
-	}
-
-	public void setUser_deleted(boolean user_deleted) {
-		this.user_deleted = user_deleted;
-	}
-
-	public String getUser_jwt_helper() {
-		return user_jwt_helper;
-	}
-
-	public void setUser_jwt_helper(String user_jwt_helper) {
-		this.user_jwt_helper = user_jwt_helper;
-	}
-
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
-
-	public Gender getGender() {
-		return gender;
-	}
-
-	public void setGender(Gender gender) {
-		this.gender = gender;
-	}*/
-
+	  //https://en.wikibooks.org/wiki/Java_Persistence/Relationships#Object_corruption.2C_one_side_of_the_relationship_is_not_updated_after_updating_the_other_side
+	/*
+	 * public void setInvoicesCreated(Invoice invoice) {
+	 * this.invoicesCreated.add(invoice); if(invoice.getUser() != this) {
+	 * invoice.setUser(this); } }
+	 */
+	 
+	
+	
 }

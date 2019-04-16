@@ -93,8 +93,8 @@ public class Invoice {
 	
 	//datum prometa
 	//@NotNull
-	@Column(columnDefinition="DATETIME DEFAULT '0000-00-00 00:00:00'")
-	private Date invoice_delivery_date = MyDateFormatter.setZeroDate();
+	@Column(columnDefinition="DATE")
+	private Date invoice_delivery_date;
 	
 	@NotNull
 	@Column(nullable = false, columnDefinition = "TINYINT NOT NULL DEFAULT '0'", length = 1)

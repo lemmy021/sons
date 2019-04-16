@@ -26,4 +26,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 		return invoiceDao.getDocumentNumber(type, year, month);
 	}
 
+	public Invoice getInvoiceById(Long invoiceId) {
+		return invoiceDao.getInvoiceById(invoiceId);
+	}
+
 }

@@ -13,6 +13,9 @@ $(function () {
     	var info_id = $(this).attr('id');
     	
     	$.post("/userdetails", {jwt_user_id : info_id}, function(response){
+    		/*alert(response);
+    		var objx = JSON.parse(JSON.stringify(response));
+    		alert(objx.response);*/
     		try{
 	    		var obj = JSON.parse(JSON.stringify(response));
 	    		$("#modal_name").text(obj.user_name);

@@ -11094,6 +11094,7 @@ html.ie11 .bs-searchbox .form-control {
 	width: 90%;
 }
 
+/* odavde je moje */
 .purple-color {
 	background-color: #F8ECF8;
 }
@@ -11133,4 +11134,8 @@ hr.style-eight:after {
 	background: white;
 	color: #9C27B0;
 	font-style: italic;
+}
+
+div.form-control button {
+	border: none;
 }
