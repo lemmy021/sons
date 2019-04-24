@@ -4,6 +4,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
@@ -11,7 +15,6 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.WordUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -24,10 +27,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import rs.sons.entity.Client;
 import rs.sons.entity.Invoice;
+import rs.sons.entity.InvoiceItem;
+import rs.sons.helper.MyDateFormatter;
 import rs.sons.helper.WordWrap;
 import rs.sons.jwt.JwtHelper;
 import rs.sons.service.ClientService;
@@ -69,7 +73,6 @@ public class InvoiceController {
 
 		Integer documentId = JwtHelper.decodeJWT(jwtId);
 		
-		System.out.println(documentId);
 		if(documentId == 0) {
 			response.sendRedirect(request.getHeader("Referer"));
 		}
@@ -106,7 +109,11 @@ public class InvoiceController {
 		contentStream.beginText();
 		contentStream.setFont(verdanaFontBold, 16);
 		contentStream.newLineAtOffset(10, height);
-		contentStream.showText("Profaktura br. 3001/2019");
+		if(invoice.isInvoice_is_invoice()) {
+			contentStream.showText("Račun br. " + this.getDocumentNumber(invoice.getInvoice_year(), invoice.getInvoice_month(), invoice.getInvoice_number()));
+		} else {
+			contentStream.showText("Predračun br. " + this.getDocumentNumber(invoice.getInvoice_preinvoice_year(), invoice.getInvoice_preinvoice_month(), invoice.getInvoice_preinvoice_number()));
+		}
 		contentStream.endText();
 
 		height -= 20;
@@ -114,7 +121,7 @@ public class InvoiceController {
 		contentStream.beginText();
 		contentStream.setFont(verdanaFont, 9);
 		contentStream.newLineAtOffset(10, height);
-		contentStream.showText("Kupac: CREATIVEFACTORY DOO");
+		contentStream.showText("Kupac: " + invoice.getInvoice_client_data().split(";")[0]);
 		contentStream.endText();
 
 		contentStream.moveTo(41, height - 2);
@@ -127,7 +134,7 @@ public class InvoiceController {
 		contentStream.beginText();
 		contentStream.setFont(verdanaFont, 9);
 		contentStream.newLineAtOffset(10, height);
-		contentStream.showText("Adresa sedišta kupca: Turgenjeva 9");
+		contentStream.showText("Adresa sedišta kupca: " + invoice.getInvoice_client_data().split(";")[1]);
 		contentStream.endText();
 
 		contentStream.moveTo(109, height - 2);
@@ -140,7 +147,7 @@ public class InvoiceController {
 		contentStream.beginText();
 		contentStream.setFont(verdanaFont, 9);
 		contentStream.newLineAtOffset(109, height);
-		contentStream.showText("21000 Novi Sad");
+		contentStream.showText(invoice.getInvoice_client_data().split(";")[2]); //city
 		contentStream.endText();
 
 		contentStream.moveTo(10, height - 2);
@@ -153,7 +160,11 @@ public class InvoiceController {
 		contentStream.beginText();
 		contentStream.setFont(verdanaFont, 9);
 		contentStream.newLineAtOffset(10, height);
-		contentStream.showText("Matični broj: 32450954");
+		if(invoice.getClient().isClient_type()) {
+			contentStream.showText("Matični broj: " + invoice.getInvoice_client_data().split(";")[5]);
+		} else {
+			contentStream.showText("Matični broj: 0");
+		}
 		contentStream.endText();
 
 		contentStream.moveTo(66, height - 2);
@@ -166,7 +177,11 @@ public class InvoiceController {
 		contentStream.beginText();
 		contentStream.setFont(verdanaFont, 9);
 		contentStream.newLineAtOffset(10, height);
-		contentStream.showText("PIB: 324509540");
+		if(invoice.getClient().isClient_type()) {
+			contentStream.showText("PIB: " + invoice.getInvoice_client_data().split(";")[4]);
+		} else {
+			contentStream.showText("PIB: 0");
+		}
 		contentStream.endText();
 
 		contentStream.moveTo(29, height - 2);
@@ -189,30 +204,43 @@ public class InvoiceController {
 
 		height -= 15;
 
-		contentStream.beginText();
-		contentStream.setFont(verdanaFont, 9);
-		contentStream.newLineAtOffset(10, height);
-		contentStream.showText("Datum izdavanja predračuna: 06.10.1978.");
-		contentStream.endText();
-
-		contentStream.moveTo(144, height - 2);
-		contentStream.setLineWidth(0.3f);
-		contentStream.lineTo(285, height - 2);
-		contentStream.stroke();
-
-		height -= 15;
-
-		contentStream.beginText();
-		contentStream.setFont(verdanaFont, 9);
-		contentStream.newLineAtOffset(10, height);
-		contentStream.showText("Datum prometa: 29.03.2019.");
-		contentStream.endText();
-
-		contentStream.moveTo(85, height - 2);
-		contentStream.setLineWidth(0.3f);
-		contentStream.lineTo(285, height - 2);
-		contentStream.stroke();
-
+		if(!invoice.isInvoice_is_invoice()) {
+			contentStream.beginText();
+			contentStream.setFont(verdanaFont, 9);
+			contentStream.newLineAtOffset(10, height);
+			contentStream.showText("Datum izdavanja predračuna: " + MyDateFormatter.formatDate(invoice.getInvoice_creation_date()));
+			contentStream.endText();
+	
+			contentStream.moveTo(144, height - 2);
+			contentStream.setLineWidth(0.3f);
+			contentStream.lineTo(285, height - 2);
+			contentStream.stroke();
+		} else {
+			contentStream.beginText();
+			contentStream.setFont(verdanaFont, 9);
+			contentStream.newLineAtOffset(10, height);
+			contentStream.showText("Datum izdavanja računa: " + MyDateFormatter.formatDate(invoice.getInvoice_payment_date_for_print()));
+			contentStream.endText();
+	
+			contentStream.moveTo(124, height - 2);
+			contentStream.setLineWidth(0.3f);
+			contentStream.lineTo(285, height - 2);
+			contentStream.stroke();
+		
+			height -= 15;
+	
+			contentStream.beginText();
+			contentStream.setFont(verdanaFont, 9);
+			contentStream.newLineAtOffset(10, height);
+			contentStream.showText("Datum prometa: " + MyDateFormatter.formatDate(invoice.getInvoice_delivery_date()));
+			contentStream.endText();
+	
+			contentStream.moveTo(85, height - 2);
+			contentStream.setLineWidth(0.3f);
+			contentStream.lineTo(285, height - 2);
+			contentStream.stroke();
+		}
+		
 		// ADDRESS WINDOW
 		// top left corner
 		contentStream.moveTo(305, 690);
@@ -275,18 +303,16 @@ public class InvoiceController {
 		//POST ADDRESS
 		Long postAddressHeight = (long) 675;
 		
-		String ime = "DRAGON LINE DOO WWWW JJKLSKDFJ OWEI";
-		
 		Long addressKorekcija = (long) 0;
 		
-		if(ime.length() < 35) {
+		if(invoice.getInvoice_client_data().split(";")[0].length() < 35) {
 			contentStream.beginText();
 			contentStream.setFont(verdanaFont, 12);
 			contentStream.newLineAtOffset(315, postAddressHeight);
-			contentStream.showText(ime);
+			contentStream.showText(invoice.getInvoice_client_data().split(";")[0]);
 			contentStream.endText();
 		} else {
-			String[] lines = WordWrap.wordWrapping(ime, 34);
+			String[] lines = WordWrap.wordWrapping(invoice.getInvoice_client_data().split(";")[0], 34);
 			addressKorekcija = (long) ((lines.length - 1) * 20);
 			
 			for(int j = 0; j < lines.length; j++) {
@@ -303,7 +329,7 @@ public class InvoiceController {
 		contentStream.beginText();
 		contentStream.setFont(verdanaFont, 12);
 		contentStream.newLineAtOffset(315, postAddressHeight);
-		contentStream.showText("Bulevar Petra Petrovica Njegosa 1124");
+		contentStream.showText(invoice.getInvoice_client_data().split(";")[1]);
 		contentStream.endText();
 		
 		postAddressHeight -= 20;
@@ -311,7 +337,7 @@ public class InvoiceController {
 		contentStream.beginText();
 		contentStream.setFont(verdanaFont, 12);
 		contentStream.newLineAtOffset(315, postAddressHeight);
-		contentStream.showText("21000 NOVI SAD");
+		contentStream.showText(invoice.getInvoice_client_data().split(";")[2]);
 		contentStream.endText();
 		
 		postAddressHeight -= 20;
@@ -435,10 +461,12 @@ public class InvoiceController {
 		contentStream.stroke();
 		
 		height = (long) 487;
-		String[] usluge = {"danas ka da postajem ko jksdfjlksfjuioruto vjkfdgjldkgj. fkjsdlkjdglk j! FSDFS flskjdfjskgdfs.  wwwwwwwwwwwww pre oi po po poopopopokjjkllk popopopopopop pofdpsofspdfodspfods pfospdfosdp pofsdpfosdpfosdp sfposdfposdp psfosdpfo pofsdpfosp pfosspd pdfospdfojflks fshdjfhsdkjfhsdkjfhsdk hfdsufhksdjfhksd", "usluga broj dvaaaaaaa"};
-		String[] cena = {"100.120.000,00", "20.000,02"};
 		
-        for(int i = 0; i < usluge.length; i++) {
+		int i = 0;
+		BigDecimal totalSum = new BigDecimal(0);
+		BigDecimal totalVAT = new BigDecimal(0);
+		
+		for(InvoiceItem item : invoice.getInvoiceItems()) {
         	contentStream.beginText();
     		contentStream.setFont(verdanaFont, 8);
     		contentStream.newLineAtOffset(12, height);
@@ -447,14 +475,15 @@ public class InvoiceController {
     		
     		Long korekcija = (long) 0;
     		
-    		if(usluge[i].length() < 66) {
+    		if(item.getInvoice_item_description().length() < 66) {
+    		//if(usluge[i].length() < 66) {
 	    		contentStream.beginText();
 	    		contentStream.setFont(verdanaFont, 8);
 	    		contentStream.newLineAtOffset(30, height);
-	    		contentStream.showText(usluge[i]);
+	    		contentStream.showText(item.getInvoice_item_description());
 	    		contentStream.endText();
     		} else {
-    			String[] lines = WordWrap.wordWrapping(usluge[i], 60);
+    			String[] lines = WordWrap.wordWrapping(item.getInvoice_item_description(), 60);
     			korekcija = (long) ((lines.length - 1) * 14);
     			
     			for(int j = 0; j < lines.length; j++) {
@@ -468,27 +497,29 @@ public class InvoiceController {
     		
     		contentStream.beginText();
     		contentStream.setFont(verdanaFont, 8);
-    		contentStream.newLineAtOffset(this.alignTextToCenter(375, 405, "2", verdanaFont, 8), height);
-    		contentStream.showText("2");
+    		contentStream.newLineAtOffset(this.alignTextToCenter(375, 405, String.valueOf(item.getInvoice_item_amount()), verdanaFont, 8), height); //amount
+    		contentStream.showText(String.valueOf(item.getInvoice_item_amount()));
     		contentStream.endText();
     		
     		contentStream.beginText();
     		contentStream.setFont(verdanaFont, 8);
-    		contentStream.newLineAtOffset(this.alignTextToCenter(405, 435, "kom", verdanaFont, 8), height);
-    		contentStream.showText("kom");
+    		contentStream.newLineAtOffset(this.alignTextToCenter(405, 435, item.getInvoice_item_unit(), verdanaFont, 8), height); //unit
+    		contentStream.showText(item.getInvoice_item_unit());
     		contentStream.endText();
     		
     		contentStream.beginText();
     		contentStream.setFont(verdanaFont, 8);
-    		//contentStream.newLineAtOffset(this.moneyPosition("20.000,02", verdanaFont, 8, 500-1), height);
-    		contentStream.newLineAtOffset(this.alignTextToCenter(435, 500, cena[i], verdanaFont, 8), height);
-    		contentStream.showText(cena[i]);
+    		contentStream.newLineAtOffset(this.alignTextToCenter(435, 500, this.moneyFormat(item.getInvoice_item_price()), verdanaFont, 8), height); //unit price
+    		contentStream.showText(this.moneyFormat(item.getInvoice_item_price()));
     		contentStream.endText();
+    		
+    		BigDecimal finalItemPrice = this.getTotalPricePerItem(item.getInvoice_item_price(), item.getInvoice_item_discount(), item.getInvoice_item_amount());
+    		totalSum = totalSum.add(finalItemPrice);
     		
     		contentStream.beginText();
     		contentStream.setFont(verdanaFont, 8);
-    		contentStream.newLineAtOffset(this.moneyPosition("20.000,02", verdanaFont, 8, 585-1), height);
-    		contentStream.showText("20.000,02");
+    		contentStream.newLineAtOffset(this.moneyPosition(String.valueOf(this.moneyFormat(finalItemPrice.doubleValue())), verdanaFont, 8, 585-1), height); //total price
+    		contentStream.showText(this.moneyFormat(finalItemPrice.doubleValue()));
     		contentStream.endText();
     		
     		contentStream.moveTo(10, height - korekcija - 2);
@@ -518,8 +549,8 @@ public class InvoiceController {
 		
 		contentStream.beginText();
 		contentStream.setFont(verdanaFont, 8);
-		contentStream.newLineAtOffset(this.moneyPosition("40.000,04", verdanaFont, 8, 585-1), height);
-		contentStream.showText("40.000,04");
+		contentStream.newLineAtOffset(this.moneyPosition(String.valueOf(this.moneyFormat(totalSum.doubleValue())), verdanaFont, 8, 585-1), height);
+		contentStream.showText(String.valueOf(this.moneyFormat(totalSum.doubleValue())));
 		contentStream.endText();
 		
 		height -= 14;
@@ -532,8 +563,8 @@ public class InvoiceController {
 		
 		contentStream.beginText();
 		contentStream.setFont(verdanaFont, 8);
-		contentStream.newLineAtOffset(this.moneyPosition("40.000,04", verdanaFont, 8, 585-1), height);
-		contentStream.showText("40.000,04");
+		contentStream.newLineAtOffset(this.moneyPosition(String.valueOf(this.moneyFormat(totalSum.doubleValue())), verdanaFont, 8, 585-1), height);
+		contentStream.showText(String.valueOf(this.moneyFormat(totalSum.doubleValue())));
 		contentStream.endText();
 		
 		height -= 14;
@@ -546,7 +577,7 @@ public class InvoiceController {
 		
 		contentStream.beginText();
 		contentStream.setFont(verdanaFont, 8);
-		contentStream.newLineAtOffset(this.moneyPosition("0,00", verdanaFont, 8, 585-1), height);
+		contentStream.newLineAtOffset(this.moneyPosition("0,00", verdanaFont, 8, 585-4), height);
 		contentStream.showText("0,00");
 		contentStream.endText();
 		
@@ -560,8 +591,8 @@ public class InvoiceController {
 		
 		contentStream.beginText();
 		contentStream.setFont(verdanaFontBold, 8);
-		contentStream.newLineAtOffset(this.moneyPosition("40.000,04", verdanaFontBold, 8, 585-1), height);
-		contentStream.showText("40.000,04");
+		contentStream.newLineAtOffset(this.moneyPosition(String.valueOf(this.moneyFormat(totalSum.doubleValue())), verdanaFontBold, 8, 585-1), height);
+		contentStream.showText(String.valueOf(this.moneyFormat(totalSum.doubleValue())));
 		contentStream.endText();
 		
 		height -= 14;
@@ -575,7 +606,7 @@ public class InvoiceController {
 		contentStream.beginText();
 		contentStream.setFont(verdanaFontBold, 8);
 		contentStream.newLineAtOffset(419, height);
-		contentStream.showText("Rok za plaćanje: 12.03.2019.");
+		contentStream.showText("Rok za plaćanje: " + MyDateFormatter.formatDate(invoice.getInvoice_payment_deadline()));
 		contentStream.endText();
 		
 		height -= 14;
@@ -591,7 +622,11 @@ public class InvoiceController {
 		contentStream.beginText();
 		contentStream.setFont(verdanaFont, 8);
 		contentStream.newLineAtOffset(419, height);
-		contentStream.showText("Predračun je validan bez potpisa i pečata");
+		if(invoice.isInvoice_is_invoice()) {
+			contentStream.showText("Račun je validan bez potpisa i pečata");
+		} else {
+			contentStream.showText("Predračun je validan bez potpisa i pečata");
+		}
 		contentStream.endText();
 		
 		//footer
@@ -629,9 +664,16 @@ public class InvoiceController {
 		
 		//double amount = 2000000;
 		//System.out.println(String.format("%,.2f", amount));
-		NumberFormat format = NumberFormat.getCurrencyInstance(Locale.GERMANY);
-        
-		return format.format(amount);
+		//NumberFormat format = NumberFormat.getCurrencyInstance(Locale.GERMANY);
+		
+		//return format.format(amount);
+		
+		DecimalFormat formatter = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.GERMANY);
+		DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
+		symbols.setCurrencySymbol(""); // Don't use null.
+		formatter.setDecimalFormatSymbols(symbols);
+		
+		return formatter.format(amount);
 	}
 	
 	private float moneyPosition(String money, PDFont font, int fontSize, long rightBorder) throws IOException {
@@ -646,6 +688,46 @@ public class InvoiceController {
 		float textWidth = font.getStringWidth(text) / 1000 * fontSize;
 		
 		return (leftBorder + ((rightBorder - leftBorder - textWidth) / 2));
+	}
+	
+	private String getDocumentNumber(int year, int month, int number) {
+		
+		/**
+		 * format 
+		 * month + number / year 
+		 * number length = 3 i.e. 3001/2019
+		 */
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(month);
+		sb.append(String.format("%03d", number));
+		sb.append("/");
+		sb.append(year);
+		
+		return sb.toString();
+	}
+	
+	private BigDecimal getTotalPricePerItem(double price, double discount, double amount) {
+		
+		BigDecimal bdPrice = new BigDecimal(price).setScale(2, RoundingMode.HALF_EVEN);
+		BigDecimal bdDiscount = new BigDecimal(discount).setScale(2, RoundingMode.HALF_EVEN);
+		BigDecimal bdAmount = new BigDecimal(amount).setScale(2, RoundingMode.HALF_EVEN);
+		BigDecimal bd100 = new BigDecimal(100);
+		
+		BigDecimal sumPerItem = new BigDecimal(0);
+		
+		if(amount > 0) {
+			sumPerItem = bdPrice.multiply(bdAmount);
+		} else {
+			sumPerItem = bdPrice;
+		}
+		
+		if(discount > 0) {
+			sumPerItem = sumPerItem.multiply((bd100.subtract(bdDiscount)).divide(bd100));
+		}
+		
+		return sumPerItem.setScale(2, RoundingMode.HALF_EVEN);
 	}
 	
 }

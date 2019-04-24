@@ -213,6 +213,13 @@ public class SalesController {
 		sb.append(";");
 		sb.append(client.getCountry().getCountry_name());
 		
+		if(client.isClient_type() == true) {
+			sb.append(";");
+			sb.append(client.getClient_pib());
+			sb.append(";");
+			sb.append(client.getClient_identification_number());
+		}
+		
 		return sb.toString();
 	}
 	

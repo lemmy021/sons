@@ -1,5 +1,6 @@
 package rs.sons.helper;
 
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -46,5 +47,11 @@ public class MyDateFormatter {
 		} catch (ParseException e) {
 			return null;
 		}
+	}
+	
+	public static String formatDate(Date date) {
+		Format formatter = new SimpleDateFormat("dd.MM.yyyy.");
+		
+		return  formatter.format(date);
 	}
 }
