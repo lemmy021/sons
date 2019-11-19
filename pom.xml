@@ -26,7 +26,7 @@
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>9.4.15.v20190215</version>
+				<version>9.4.17.v20190418</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -172,13 +172,15 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.25</version>
+			<!-- <version>1.7.26</version> -->
+			<version>2.0.0-alpha1</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
-			<version>2.1.2.RELEASE</version>
+			<!-- <version>2.1.6.RELEASE</version> -->
+			<version>2.2.1.RELEASE</version>
 		</dependency>
 
 		<dependency>
@@ -199,24 +201,31 @@
 			<version>${spring.security.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${spring.security.version}</version>
+		</dependency>
+
+
 		<!-- hibernate dependencies -->
 
 		<dependency>
 			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-			<version>5.4.0.Final</version>
+			<artifactId>hibernate-core</artifactId>
+			<version>5.4.2.Final</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.hibernate</groupId>
+			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>6.0.13.Final</version>
+			<version>6.1.0.Final</version>
 		</dependency>
 
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.13</version>
+			<version>${mysql.connector.version}</version>
 		</dependency>
 
 		<!-- <dependency> <groupId>jstl</groupId> <artifactId>jstl</artifactId> 
@@ -228,32 +237,33 @@
 		<dependency>
 			<groupId>org.thymeleaf</groupId>
 			<artifactId>thymeleaf</artifactId>
-			<version>3.0.11.RELEASE</version>
+			<version>${thymeleaf.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.thymeleaf</groupId>
 			<artifactId>thymeleaf-spring5</artifactId>
-			<version>3.0.11.RELEASE</version>
+			<version>${thymeleaf.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>nz.net.ultraq.thymeleaf</groupId>
 			<artifactId>thymeleaf-layout-dialect</artifactId>
-			<version>2.3.0</version>
+			<version>2.4.1</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.4</version>
+			<version>${lombok.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>27.0.1-jre</version>
+			<!-- <version>27.0.1-jre</version> -->
+			<version>28.1-jre</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
@@ -333,17 +343,32 @@
 			<artifactId>commons-lang</artifactId>
 			<version>2.6</version>
 		</dependency>
+		
+		<!-- <dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>3.9</version>
+		</dependency> -->
+
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.5.0-b01</version>
+		</dependency>
 
 
 	</dependencies>
 
 	<properties>
-		<org.springframework.version>5.1.4.RELEASE</org.springframework.version> <!-- wanted Spring version -->
-		<apache.tiles>3.0.8</apache.tiles>
-		<spring.security.version>5.1.2.RELEASE</spring.security.version>
-		<jackson.version>2.9.8</jackson.version>
+		<org.springframework.version>5.2.1.RELEASE</org.springframework.version> <!-- wanted Spring version -->
+		<!-- <apache.tiles>3.0.8</apache.tiles> -->
+		<spring.security.version>5.2.1.RELEASE</spring.security.version>
+		<jackson.version>2.10.1</jackson.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<apache.pdfbox.versio>2.0.14</apache.pdfbox.versio>
+		<apache.pdfbox.versio>2.0.17</apache.pdfbox.versio>
+		<thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
+		<lombok.version>1.18.10</lombok.version>
+		<mysql.connector.version>8.0.18</mysql.connector.version>
 	</properties>
 
 </project>

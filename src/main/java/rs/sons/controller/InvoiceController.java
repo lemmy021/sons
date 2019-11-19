@@ -12,6 +12,8 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,10 +25,17 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamSource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import rs.sons.entity.Client;
 import rs.sons.entity.Invoice;
@@ -45,6 +54,9 @@ public class InvoiceController {
 
 	@Autowired
 	InvoiceService invoiceService;
+	
+	@Autowired
+    public JavaMailSender emailSender;
 
 	@GetMapping("/invoices/{jwtId:.+}")
 	public String showAllInvoicesForUser(Model model, @PathVariable("jwtId") String jwtId) {
@@ -67,10 +79,9 @@ public class InvoiceController {
 
 		return "invoicesforuser";
 	}
-
+	
 	@GetMapping("/invoicepdf/{jwtId:.+}")
-	public void newPdf(HttpServletRequest request, HttpServletResponse response, @PathVariable("jwtId") String jwtId) throws java.io.IOException {
-
+	public void createInvoicePdf(HttpServletRequest request, HttpServletResponse response, @PathVariable("jwtId") String jwtId) throws IOException, MessagingException {
 		Integer documentId = JwtHelper.decodeJWT(jwtId);
 		
 		if(documentId == 0) {
@@ -78,6 +89,56 @@ public class InvoiceController {
 		}
 		
 		Invoice invoice = invoiceService.getInvoiceById(Long.valueOf(documentId.longValue()));
+		
+		if(invoice == null) {
+			response.sendRedirect(request.getHeader("Referer"));
+		}
+		
+		ByteArrayOutputStream baos = _newPdf(request, invoice);
+		
+		response.setContentType("application/pdf");
+		response.setHeader("Content-Disposition", "attachment; filename=\"pdfbox.pdf\"");
+		OutputStream os = response.getOutputStream();
+		baos.writeTo(os);
+		os.flush();
+		os.close();
+		
+	}
+	
+	@PostMapping("/sendinvoice")
+	@ResponseBody
+	public String sendInvoicePdfOnEmail(HttpServletRequest request, @RequestParam("jwt_invoice_id") String jwtInvoiceId) throws IOException, MessagingException {
+		Integer invoiceId = JwtHelper.decodeJWT(jwtInvoiceId);
+		
+		if(invoiceId > 0) {
+			Invoice invoice = invoiceService.getInvoiceById(Long.valueOf(invoiceId.longValue()));
+			
+			if(invoice != null) {
+				ByteArrayOutputStream baos = _newPdf(request, invoice);
+				
+				final InputStreamSource attachment = new ByteArrayResource(baos.toByteArray());
+				
+				MimeMessage message = emailSender.createMimeMessage();
+			      
+			    MimeMessageHelper helper = new MimeMessageHelper(message, true);
+			    
+			    helper.setTo("milekosovac@yahoo.com");
+			    helper.setSubject("Test subject");
+			    helper.setText("Konju jedan");
+			    helper.addAttachment("document.pdf", attachment);
+			    
+			    emailSender.send(message);
+			    
+			    return "1";
+			}
+		}
+		
+		return "";
+	}
+
+	private ByteArrayOutputStream _newPdf(HttpServletRequest request, Invoice invoice) throws java.io.IOException, MessagingException {
+		
+		//Invoice invoice = invoiceService.getInvoiceById(Long.valueOf(documentId.longValue()));
 		
 		PDDocument document = new PDDocument();
 		PDPage page = new PDPage(PDRectangle.A4);
@@ -464,7 +525,6 @@ public class InvoiceController {
 		
 		int i = 0;
 		BigDecimal totalSum = new BigDecimal(0);
-		BigDecimal totalVAT = new BigDecimal(0);
 		
 		for(InvoiceItem item : invoice.getInvoiceItems()) {
         	contentStream.beginText();
@@ -644,20 +704,36 @@ public class InvoiceController {
 		//wordwrap http://www.avajava.com/tutorials/lessons/how-do-i-wrap-words-in-a-string-at-a-particular-width.html
 		//alignment https://stackoverflow.com/questions/24004539/right-alignment-text-in-pdfbox
 		//money format https://www.concretepage.com/java/java-bigdecimal-tutorial-with-example
-		// Make sure that the content stream is closed:
 		
+		// Make sure that the content stream is closed:
 		contentStream.close();
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		document.save(baos);
 		document.close();
+		
+		/*
+		final InputStreamSource attachment = new ByteArrayResource(baos.toByteArray());
+		
+		MimeMessage message = emailSender.createMimeMessage();
+	      
+	    MimeMessageHelper helper = new MimeMessageHelper(message, true);
+	    
+	    helper.setTo("milekosovac@yahoo.com");
+	    helper.setSubject("Test subject");
+	    helper.setText("Konju jedan");
+	    helper.addAttachment("document.pdf", attachment);
+	    
+	    emailSender.send(message);
+		*/
 
-		response.setContentType("application/pdf");
-		response.setHeader("Content-Disposition", "attachment; filename=\"pdfbox.pdf\"");
-		OutputStream os = response.getOutputStream();
-		baos.writeTo(os);
-		os.flush();
-		os.close();
+	    return baos;
+		/*
+		 * response.setContentType("application/pdf");
+		 * response.setHeader("Content-Disposition",
+		 * "attachment; filename=\"pdfbox.pdf\""); OutputStream os =
+		 * response.getOutputStream(); baos.writeTo(os); os.flush(); os.close();
+		 */
 	}
 	
 	private String moneyFormat(Double amount) {

@@ -1,19 +1,20 @@
 #
-#Tue Apr 23 16:33:44 CEST 2019
+#Tue Nov 19 11:27:35 CET 2019
 rs.sons.service.CountryServiceImpl=org.springframework.stereotype.Component
 rs.sons.entity.Invoice=javax.persistence.Entity
 rs.sons.entity.User=javax.persistence.Entity
-rs.sons.entity.Role=javax.persistence.Entity
 rs.sons.service.MenuServiceImpl=org.springframework.stereotype.Component
+rs.sons.entity.Role=javax.persistence.Entity
 rs.sons.service.InitDbService=org.springframework.stereotype.Component
 rs.sons.entity.Menu=javax.persistence.Entity
 rs.sons.dao.RoleDaoImpl=org.springframework.stereotype.Component
 rs.sons.service.ClientServiceImpl=org.springframework.stereotype.Component
-rs.sons.service.InvoiceServiceImpl=org.springframework.stereotype.Component
 rs.sons.entity.Resource=javax.persistence.Entity
-rs.sons.validator.EditUserValidator=org.springframework.stereotype.Component
+rs.sons.service.InvoiceServiceImpl=org.springframework.stereotype.Component
 rs.sons.validator.NewClientValidator=org.springframework.stereotype.Component
 rs.sons.dao.InvoiceDaoImpl=org.springframework.stereotype.Component,javax.transaction.Transactional
+rs.sons.validator.EditUserValidator=org.springframework.stereotype.Component
+rs.sons.mail.JavaMail=org.springframework.stereotype.Component
 rs.sons.entity.Gender=javax.persistence.Entity
 rs.sons.controller.IndexController=org.springframework.stereotype.Component
 rs.sons.validator.EditClientValidator=org.springframework.stereotype.Component
