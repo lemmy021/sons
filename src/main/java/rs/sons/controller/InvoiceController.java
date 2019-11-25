@@ -96,6 +96,21 @@ public class InvoiceController {
 		
 		ByteArrayOutputStream baos = _newPdf(request, invoice);
 		
+		//odavde
+		final InputStreamSource attachment = new ByteArrayResource(baos.toByteArray());
+		
+		MimeMessage message = emailSender.createMimeMessage();
+	      
+	    MimeMessageHelper helper = new MimeMessageHelper(message, true);
+	    
+	    helper.setTo("milekosovac@yahoo.com");
+	    helper.setSubject("Test subject");
+	    helper.setText("Konju jedan");
+	    helper.addAttachment("document.pdf", attachment);
+	    
+	    emailSender.send(message);
+		//dovde
+		
 		response.setContentType("application/pdf");
 		response.setHeader("Content-Disposition", "attachment; filename=\"pdfbox.pdf\"");
 		OutputStream os = response.getOutputStream();
