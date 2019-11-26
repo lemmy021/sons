@@ -101,7 +101,7 @@
 											</div>
 										</td>
 										
-										<td th:text="${#numbers.formatDecimal(#aggregates.sum(invoice.invoiceItems.![invoice_item_price]), 1, 2, 'COMMA')} + ' din.'">Total</td>
+										<td th:text="${#numbers.formatDecimal(#aggregates.sum(invoice.invoiceItems.![(invoice_item_price * invoice_item_amount) - (((invoice_item_price * invoice_item_amount) / 100) * invoice_item_discount)]), 1, 2, 'COMMA')} + ' din.'">Total</td>
 										<td th:text="${#dates.format(invoice.invoice_creation_date, 'dd.MM.yyyy.')}" >Date</td>
 										<td th:text="${#dates.format(invoice.invoice_delivery_date, 'dd.MM.yyyy.')}" th:classappend="${invoice.invoice_delivery_date} ? ima : nema " th:id="${invoice.invoice_id}">Delivery date</td>
 										

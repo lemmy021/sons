@@ -1,5 +1,5 @@
 #
-#Mon Nov 25 10:52:32 CET 2019
+#Tue Nov 26 13:18:22 CET 2019
 rs.sons.service.CountryServiceImpl=org.springframework.stereotype.Component
 rs.sons.entity.Invoice=javax.persistence.Entity
 rs.sons.entity.User=javax.persistence.Entity
@@ -20,8 +20,8 @@ rs.sons.controller.IndexController=org.springframework.stereotype.Component
 rs.sons.validator.EditClientValidator=org.springframework.stereotype.Component
 rs.sons.entity.InvoiceItem=javax.persistence.Entity
 rs.sons.dao.UserDaoImpl=org.springframework.stereotype.Component
-rs.sons.entity.Country=javax.persistence.Entity
 rs.sons.dao.ClientDaoImpl=org.springframework.stereotype.Component,javax.transaction.Transactional
+rs.sons.entity.Country=javax.persistence.Entity
 rs.sons.controller.OrderController=org.springframework.stereotype.Component
 rs.sons.dao.MenuDaoImpl=org.springframework.stereotype.Component
 rs.sons.controller.InvoiceController=org.springframework.stereotype.Component
