@@ -96,21 +96,6 @@ public class InvoiceController {
 		
 		ByteArrayOutputStream baos = _newPdf(request, invoice);
 		
-		//odavde
-		final InputStreamSource attachment = new ByteArrayResource(baos.toByteArray());
-		
-		MimeMessage message = emailSender.createMimeMessage();
-	      
-	    MimeMessageHelper helper = new MimeMessageHelper(message, true);
-	    
-	    helper.setTo("milekosovac@yahoo.com");
-	    helper.setSubject("Test subject");
-	    helper.setText("Konju jedan");
-	    helper.addAttachment("document.pdf", attachment);
-	    
-	    emailSender.send(message);
-		//dovde
-		
 		response.setContentType("application/pdf");
 		response.setHeader("Content-Disposition", "attachment; filename=\"pdfbox.pdf\"");
 		OutputStream os = response.getOutputStream();
@@ -128,6 +113,8 @@ public class InvoiceController {
 		if(invoiceId > 0) {
 			Invoice invoice = invoiceService.getInvoiceById(Long.valueOf(invoiceId.longValue()));
 			
+			System.out.println("mail klijenta: " + invoice.getClient().getClient_email());
+			
 			if(invoice != null) {
 				ByteArrayOutputStream baos = _newPdf(request, invoice);
 				
@@ -137,11 +124,17 @@ public class InvoiceController {
 			      
 			    MimeMessageHelper helper = new MimeMessageHelper(message, true);
 			    
-			    helper.setTo("milekosovac@yahoo.com");
-			    helper.setSubject("Test subject");
-			    helper.setText("Konju jedan");
-			    helper.addAttachment("document.pdf", attachment);
+			    helper.setTo(invoice.getClient().getClient_email()); //klijentov email
 			    
+			    if(invoice.isInvoice_is_invoice()) {
+			    	helper.setText("Poštovani, u prilogu se nalazi račun za pružene usluge.");
+			    	helper.setSubject("Račun");
+			    	helper.addAttachment("Račun br. " + this.getDocumentNumber(invoice.getInvoice_year(), invoice.getInvoice_month(), invoice.getInvoice_number()) + ".pdf", attachment);
+			    } else {
+			    	helper.setText("Poštovani, u prilogu se nalazi predračun.");
+			    	helper.setSubject("Predračun");
+			    	helper.addAttachment("Predračun br. " + this.getDocumentNumber(invoice.getInvoice_preinvoice_year(), invoice.getInvoice_preinvoice_month(), invoice.getInvoice_preinvoice_number()) + ".pdf", attachment);
+			    }
 			    emailSender.send(message);
 			    
 			    return "1";
@@ -152,8 +145,6 @@ public class InvoiceController {
 	}
 
 	private ByteArrayOutputStream _newPdf(HttpServletRequest request, Invoice invoice) throws java.io.IOException, MessagingException {
-		
-		//Invoice invoice = invoiceService.getInvoiceById(Long.valueOf(documentId.longValue()));
 		
 		PDDocument document = new PDDocument();
 		PDPage page = new PDPage(PDRectangle.A4);

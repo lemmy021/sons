@@ -15,6 +15,14 @@ $(function () {
           "order": [[ 1, 'asc' ]]
     });
     
+    var invoicetable = $('.js-invoices-table').DataTable({
+        responsive: true,
+        "columnDefs": [
+            { "searchable": false, "targets": 5 }
+          ],
+          "order": [[ 1, 'asc' ]]
+    });
+    
     usertable.on( 'order.dt search.dt', function () {
     	usertable.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             cell.innerHTML = i+1;

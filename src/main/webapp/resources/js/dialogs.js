@@ -64,6 +64,16 @@ $(function () {
         
 		showConfirmMessageNew(id, row, url, textMsg, swalMsg);
     });
+    
+    $('.js-invoices-table').on('click', '.send_invoice_pdf', function () {
+    	var url_id = $(this).attr('id');
+		var url = url_id.split("___")[0];
+		var id = url_id.split("___")[1];
+		var textMsg = "Document will be sent to client !";
+		var swalMsg = "Document has been sent !";
+		
+		sendInvoice(id, url, textMsg, swalMsg);
+    });
 });
 
 
@@ -100,6 +110,24 @@ function showConfirmMessageNew(id, row, url, textMsg, swalMsg) {
 			if(data == "1"){
 				swal("Deleted!", swalMsg, "success");
 				row.remove().draw(false);
+			}
+		})
+    });
+}
+
+function sendInvoice(id, url, textMsg, swalMsg) {
+	swal({
+        title: "Are you sure?",
+        text: textMsg,
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes, send the document !",
+        closeOnConfirm: false
+    }, function () {
+		$.post(url, {jwt_invoice_id : id}, function(data){
+			if(data == "1"){
+				swal("Sent", swalMsg, "success");
 			}
 		})
     });
