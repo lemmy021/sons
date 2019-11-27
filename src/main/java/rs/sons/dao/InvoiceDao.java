@@ -13,4 +13,6 @@ public interface InvoiceDao {
 	public int getDocumentNumber(String type, int year, int month);
 	
 	public Invoice getInvoiceById(Long invoiceId);
+	
+	public void deleteInvoiceById(Long invoiceId);
 }

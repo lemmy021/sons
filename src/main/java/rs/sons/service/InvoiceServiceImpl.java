@@ -30,4 +30,9 @@ public class InvoiceServiceImpl implements InvoiceService {
 		return invoiceDao.getInvoiceById(invoiceId);
 	}
 
+	@Override
+	public void deleteInvoiceById(Long invoiceId) {
+		invoiceDao.deleteInvoiceById(invoiceId);
+	}
+
 }

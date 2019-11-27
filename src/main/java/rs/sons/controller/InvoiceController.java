@@ -11,6 +11,7 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -113,8 +114,6 @@ public class InvoiceController {
 		if(invoiceId > 0) {
 			Invoice invoice = invoiceService.getInvoiceById(Long.valueOf(invoiceId.longValue()));
 			
-			System.out.println("mail klijenta: " + invoice.getClient().getClient_email());
-			
 			if(invoice != null) {
 				ByteArrayOutputStream baos = _newPdf(request, invoice);
 				
@@ -139,6 +138,26 @@ public class InvoiceController {
 			    
 			    return "1";
 			}
+		}
+		
+		return "";
+	}
+	
+	@PostMapping("/deleteinvoice")
+	@ResponseBody
+	public String deleteInvoice(@RequestParam("jwt_invoice_id") String jwtInvoiceId) {
+		
+		Integer invoiceId = JwtHelper.decodeJWT(jwtInvoiceId);
+		
+		System.out.println(invoiceId);
+		
+		if(invoiceId > 0) {
+			invoiceService.deleteInvoiceById(invoiceId.longValue());
+			
+			  try { TimeUnit.SECONDS.sleep(3); } catch (InterruptedException e) { // TODO
+			  e.printStackTrace(); }
+			 
+			return "1";
 		}
 		
 		return "";

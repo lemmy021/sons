@@ -109,7 +109,7 @@
 											<div style="color: #00bcd4"><a th:href="@{/invoicepdf/} + ${T(rs.sons.jwt.JwtHelper).createJWT(invoice.invoice_id)}">Print</a></div>
 											<div style="color: #00bcd4"><a href="#" th:id="@{/sendinvoice___} + ${T(rs.sons.jwt.JwtHelper).createJWT(invoice.invoice_id)}" class="send_invoice_pdf">Send to email</a></div>
 											<div style="color: #00bcd4"><a href="#">Applay payment</a></div>
-											<div style="color: #00bcd4"><a href="#">Delete</a></div>
+											<div style="color: #00bcd4"><a href="#" th:id="@{/deleteinvoice___} + ${T(rs.sons.jwt.JwtHelper).createJWT(invoice.invoice_id)}" class="delete_invoice">Delete</a></div>
 										</td>
 									</tr>
 								</tbody>

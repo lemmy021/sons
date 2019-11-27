@@ -74,6 +74,18 @@ $(function () {
 		
 		sendInvoice(id, url, textMsg, swalMsg);
     });
+    
+    $('.js-invoices-table').on('click', '.delete_invoice', function () {
+    	var table = $('.js-invoices-table').DataTable();
+		var row = table.row( $(this).parents('tr') );
+    	var url_id = $(this).attr('id');
+		var url = url_id.split("___")[0];
+		var id = url_id.split("___")[1];
+		var textMsg = "Document will be deleted !";
+		var swalMsg = "Document has been deleted !";
+		
+		deleteInvoice(id, url, row, textMsg, swalMsg);
+    });
 });
 
 
@@ -123,11 +135,32 @@ function sendInvoice(id, url, textMsg, swalMsg) {
         showCancelButton: true,
         confirmButtonColor: "#DD6B55",
         confirmButtonText: "Yes, send the document !",
+        showLoaderOnConfirm: true,
         closeOnConfirm: false
     }, function () {
 		$.post(url, {jwt_invoice_id : id}, function(data){
 			if(data == "1"){
 				swal("Sent", swalMsg, "success");
+			}
+		})
+    });
+}
+
+function deleteInvoice(id, url, row, textMsg, swalMsg) {
+	swal({
+        title: "Are you sure?",
+        text: textMsg,
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes, delete the document !",
+        showLoaderOnConfirm: true,
+        closeOnConfirm: false
+    }, function () {
+		$.post(url, {jwt_invoice_id : id}, function(data){
+			if(data == "1"){
+				swal("Deleted", swalMsg, "success");
+				row.remove().draw(false);
 			}
 		})
     });

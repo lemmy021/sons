@@ -85,4 +85,15 @@ public class InvoiceDaoImpl implements InvoiceDao {
 		return (Invoice) query.getResultList().stream().findFirst().orElse(null);
 	}
 
+	@Override
+	public void deleteInvoiceById(Long invoiceId) {
+
+		Invoice invoice = em.find(Invoice.class, invoiceId);
+		
+		if(invoice != null) {
+			em.remove(invoice);
+			
+		}
+	}
+
 }
