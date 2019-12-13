@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import rs.sons.dao.InvoiceDao;
 import rs.sons.entity.Invoice;
+import rs.sons.entity.User;
 
 @Service("invoiceService")
 public class InvoiceServiceImpl implements InvoiceService {
@@ -33,6 +34,21 @@ public class InvoiceServiceImpl implements InvoiceService {
 	@Override
 	public void deleteInvoiceById(Long invoiceId) {
 		invoiceDao.deleteInvoiceById(invoiceId);
+	}
+
+	@Override
+	public void createInvoiceWithPayment(Long invoiceId, String paymentDate, String deliveryDate, User user) {
+		invoiceDao.createInvoiceWithPayment(invoiceId, paymentDate, deliveryDate, user);
+	}
+
+	@Override
+	public void createInvoiceWithoutPayment(Long invoiceId, String deliveryDate, User user) {
+		invoiceDao.createInvoiceWithoutPayment(invoiceId, deliveryDate, user);
+	}
+
+	@Override
+	public void applyPaymentOnExistingInvoice(Long invoiceId, String paymentDate) {
+		invoiceDao.applyPaymentOnExistingInvoice(invoiceId, paymentDate);
 	}
 
 }

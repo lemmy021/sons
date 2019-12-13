@@ -35,5 +35,70 @@ $(function () {
     	    }
     	);*/
 	});
+	
+	$(".invoice_pay_yes").click(function() {
+		var error = 0;
+		
+		$('.form-line input').each(
+				function(index){
+					var input = $(this);
+					
+					if(input.val() == "") {
+						error = 1;
+					}
+				}
+	    );
+		
+		var id = $(this).attr("id");
+		var delivery_date = $("#delivery_date").val();
+		var payment_date = $("#payment_date").val();
+		
+		if(error > 0){
+			swal("Please, fill the date(s)", "", "error");
+		} else if($(this).attr("name")) {
+			/*var id = $(this).attr("id");
+			var delivery_date = $("#delivery_date").val();
+			var payment_date = $("#payment_date").val();*/
+			
+			createInvoice($(this).attr("id"), $("#delivery_date").val(), $("#payment_date").val(), "Create invoice", "Yes", "Invoice has been paid successfully", 3);
+		} else {
+			createInvoice($(this).attr("id"), $("#delivery_date").val(), $("#payment_date").val(), "Create invoice", "Yes", "Invoice has been created successfully", 1)
+		}
+	})
+	
+	$(".invoice_pay_no").click(function() {
+		var id = $(this).attr("id");
+		var delivery_date = $("#delivery_date").val();
+		
+		if($("#delivery_date").val() != "") {
+			createInvoice($(this).attr("id"), $("#delivery_date").val(), "", "Create invoice", "Yes", "Invoice has been created successfully", 2);
+		} else {
+			swal("Delivery date cannot be empty", "", "error");
+		}
+	})
 
 })
+
+/*
+ * @action 
+ * 1 - create invoice with paying
+ * 2 - create invoice without paying
+ * 3 - invoice created but now is going to be paid
+ */
+function createInvoice(invoiceId, deliveryDate = null, paymentDate = null, textMsg, confirmBtnText, successText, action){
+	swal({
+        title: "Are you sure?",
+        text: textMsg,
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: confirmBtnText,
+        closeOnConfirm: false
+    }, function () {
+		$.post("/createinvoice", {jwt_invoice_id : invoiceId, payment_date : paymentDate, delivery_date : deliveryDate, action : action}, function(data){
+			if(data == "1"){
+				swal("Done!", successText, "success");
+			}
+		})
+    });
+}

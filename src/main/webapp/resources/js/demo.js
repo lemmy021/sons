@@ -11,7 +11,7 @@ $(function () {
 });
 
 //Skin changer
-function skinChanger() {
+/*function skinChanger() {
     $('.right-sidebar .demo-choose-skin li').on('click', function () {
         var $body = $('body');
         var $this = $(this);
@@ -23,10 +23,10 @@ function skinChanger() {
 
         $body.addClass('theme-' + $this.data('theme'));
     });
-}
+}*/
 
 //Skin tab content set height and show scroll
-function setSkinListHeightAndScroll(isFirstTime) {
+/*function setSkinListHeightAndScroll(isFirstTime) {
     var height = $(window).height() - ($('.navbar').innerHeight() + $('.right-sidebar .nav-tabs').outerHeight());
     var $el = $('.demo-choose-skin');
 
@@ -43,7 +43,7 @@ function setSkinListHeightAndScroll(isFirstTime) {
         borderRadius: '0',
         railBorderRadius: '0'
     });
-}
+}*/
 
 //Setting tab content set height and show scroll
 function setSettingListHeightAndScroll(isFirstTime) {
@@ -77,7 +77,7 @@ function activateNotificationAndTasksScroll() {
     });
 }
 
-//Google Analiytics ======================================================================================
+/*//Google Analiytics ======================================================================================
 addLoadEvent(loadTracking);
 var trackingId = 'UA-30038099-6';
 
@@ -105,3 +105,4 @@ function loadTracking() {
     ga('send', 'pageview');
 }
 //========================================================================================================
+*/

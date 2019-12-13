@@ -75,6 +75,17 @@ $(function () {
 		sendInvoice(id, url, textMsg, swalMsg);
     });
     
+    //$('.js-invoices-table').on('click', '.send_invoice_pdf', function () {
+    $(".send_invoice_pdf").click(function(){
+    	var url_id = $(this).attr('id');
+		var url = url_id.split("___")[0];
+		var id = url_id.split("___")[1];
+		var textMsg = "Document will be sent to client !";
+		var swalMsg = "Document has been sent !";
+		
+		sendInvoice(id, url, textMsg, swalMsg);
+    });
+    
     $('.js-invoices-table').on('click', '.delete_invoice', function () {
     	var table = $('.js-invoices-table').DataTable();
 		var row = table.row( $(this).parents('tr') );
@@ -131,7 +142,7 @@ function sendInvoice(id, url, textMsg, swalMsg) {
 	swal({
         title: "Are you sure?",
         text: textMsg,
-        type: "warning",
+        type: "info",
         showCancelButton: true,
         confirmButtonColor: "#DD6B55",
         confirmButtonText: "Yes, send the document !",

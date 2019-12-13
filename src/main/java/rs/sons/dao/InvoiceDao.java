@@ -3,6 +3,7 @@ package rs.sons.dao;
 import java.util.List;
 
 import rs.sons.entity.Invoice;
+import rs.sons.entity.User;
 
 public interface InvoiceDao {
 
@@ -15,4 +16,10 @@ public interface InvoiceDao {
 	public Invoice getInvoiceById(Long invoiceId);
 	
 	public void deleteInvoiceById(Long invoiceId);
+	
+	public void createInvoiceWithPayment(Long invoiceId, String paymentDate, String deliveryDate, User user);
+	
+	public void createInvoiceWithoutPayment(Long invoiceId, String deliveryDate, User user);
+	
+	public void applyPaymentOnExistingInvoice(Long invoiceId, String paymentDate);
 }

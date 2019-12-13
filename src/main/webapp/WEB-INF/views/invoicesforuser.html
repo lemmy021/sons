@@ -79,7 +79,7 @@
 													<div th:text="${invoice.invoice_month + #numbers.formatDecimal(invoice.invoice_number,3,0) + '/' + invoice.invoice_year}">Invoice number</div>
 													<div th:switch="${invoice.invoice_payed}">
 														<div th:case="false" style="color:red;">Not paid</div>
-														<div th:case="true">Paid</div>
+														<!-- <div th:case="true">Paid</div> -->
 													</div>
 													<div>
 														<span>Created by: </span>
@@ -108,7 +108,7 @@
 										<td>
 											<div style="color: #00bcd4"><a th:href="@{/invoicepdf/} + ${T(rs.sons.jwt.JwtHelper).createJWT(invoice.invoice_id)}">Print</a></div>
 											<div style="color: #00bcd4"><a href="#" th:id="@{/sendinvoice___} + ${T(rs.sons.jwt.JwtHelper).createJWT(invoice.invoice_id)}" class="send_invoice_pdf">Send to email</a></div>
-											<div style="color: #00bcd4"><a href="#">Applay payment</a></div>
+											<div style="color: #00bcd4" th:if="not ${invoice.invoice_payed}"><a th:href="@{/applaypayment/} + ${T(rs.sons.jwt.JwtHelper).createJWT(invoice.invoice_id)}">Apply payment</a></div>
 											<div style="color: #00bcd4"><a href="#" th:id="@{/deleteinvoice___} + ${T(rs.sons.jwt.JwtHelper).createJWT(invoice.invoice_id)}" class="delete_invoice">Delete</a></div>
 										</td>
 									</tr>

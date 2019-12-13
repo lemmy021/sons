@@ -6,11 +6,16 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.security.Principal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.mail.MessagingException;
@@ -18,6 +23,7 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -41,11 +47,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import rs.sons.entity.Client;
 import rs.sons.entity.Invoice;
 import rs.sons.entity.InvoiceItem;
+import rs.sons.entity.User;
 import rs.sons.helper.MyDateFormatter;
 import rs.sons.helper.WordWrap;
 import rs.sons.jwt.JwtHelper;
 import rs.sons.service.ClientService;
 import rs.sons.service.InvoiceService;
+import rs.sons.service.UserService;
 
 @Controller
 public class InvoiceController {
@@ -58,6 +66,9 @@ public class InvoiceController {
 	
 	@Autowired
     public JavaMailSender emailSender;
+	
+	@Autowired
+	UserService userService;
 
 	@GetMapping("/invoices/{jwtId:.+}")
 	public String showAllInvoicesForUser(Model model, @PathVariable("jwtId") String jwtId) {
@@ -154,7 +165,7 @@ public class InvoiceController {
 		if(invoiceId > 0) {
 			invoiceService.deleteInvoiceById(invoiceId.longValue());
 			
-			  try { TimeUnit.SECONDS.sleep(3); } catch (InterruptedException e) { // TODO
+			  try { TimeUnit.SECONDS.sleep(3); } catch (InterruptedException e) {
 			  e.printStackTrace(); }
 			 
 			return "1";
@@ -162,6 +173,68 @@ public class InvoiceController {
 		
 		return "";
 	}
+	
+	@GetMapping("/applaypayment/{jwtId:.+}")
+	public String applayPayment(Model model, @PathVariable("jwtId") String jwtId) {
+		
+		Integer invoiceId = JwtHelper.decodeJWT(jwtId);
+		
+		Invoice invoice = invoiceService.getInvoiceById(invoiceId.longValue());
+		
+		String documentNumber = "";
+		if(invoice.isInvoice_is_invoice()) {
+			documentNumber = this.getDocumentNumber(invoice.getInvoice_year(), invoice.getInvoice_month(), invoice.getInvoice_number()); 
+		} else {
+			documentNumber = this.getDocumentNumber(invoice.getInvoice_preinvoice_year(), invoice.getInvoice_preinvoice_month(), invoice.getInvoice_preinvoice_number());
+		}
+		
+		model.addAttribute("document_number",documentNumber);
+		model.addAttribute("invoice", invoice);
+		
+		
+		return "applaypayment";
+	}
+	
+	@PostMapping("/createinvoice")
+	@ResponseBody
+	public String createInvoice(@RequestParam Map<String, String> allParams, Principal principal) {
+		
+		try {
+			Date date = new SimpleDateFormat("dd.MM.yyyy.").parse(allParams.get("payment_date"));
+			System.out.println(date);
+		} catch (ParseException e) {
+		}
+		
+		
+		Integer invoiceId = JwtHelper.decodeJWT(allParams.get("jwt_invoice_id"));
+		User user = userService.findUserByUsername(principal.getName());
+		
+		switch (Integer.parseInt(allParams.get("action"))) {
+		
+		case 1:
+			if(StringUtils.isNotBlank(allParams.get("delivery_date")) && StringUtils.isNotBlank(allParams.get("payment_date"))) {
+				invoiceService.createInvoiceWithPayment(invoiceId.longValue(), allParams.get("payment_date"), allParams.get("delivery_date"), user);
+			}
+			break;
+			
+		case 2:
+			if(StringUtils.isNotBlank(allParams.get("delivery_date"))) {
+				invoiceService.createInvoiceWithoutPayment(invoiceId.longValue(), allParams.get("delivery_date"), user);
+			}
+			break;
+		
+		case 3:
+			invoiceService.applyPaymentOnExistingInvoice(invoiceId.longValue(), allParams.get("payment_date"));
+			break;
+		default:
+			break;
+		}
+		
+		return "1";
+	}
+	
+	
+	
 
 	private ByteArrayOutputStream _newPdf(HttpServletRequest request, Invoice invoice) throws java.io.IOException, MessagingException {
 		
