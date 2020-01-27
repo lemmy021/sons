@@ -39,7 +39,7 @@ import rs.sons.validator.EditUserValidator;
 import rs.sons.validator.NewUserValidator;
 
 @Controller
-public class IndexController extends HelperController {
+public class IndexController {
 	
 	@Autowired
 	private NewUserValidator newUserValidator;
@@ -52,7 +52,7 @@ public class IndexController extends HelperController {
 		binder.addValidators(newUserValidator);
 	}
 	
-	@InitBinder
+	@InitBinder("edituser")/*bilo bez zagrade*/
 	protected void initBinderEditUser(WebDataBinder binder) {
 		binder.addValidators(editUserValidator);
 	}
@@ -83,11 +83,11 @@ public class IndexController extends HelperController {
 	    return genders;
 	}
 	
-	@RequestMapping(value = "/hello", method = RequestMethod.GET)
-	public String hello(Model model) {
-		model.addAttribute("name", "Hello Lemmy");
-		return "hello";
-	}
+	/*
+	 * @RequestMapping(value = "/hello", method = RequestMethod.GET) public String
+	 * hello(Model model) { model.addAttribute("name", "Hello Lemmy"); return
+	 * "hello"; }
+	 */
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(Model model) {
@@ -109,9 +109,9 @@ public class IndexController extends HelperController {
 		User loggedUser = userService.findUserByUsername(principal.getName());
 
 		if(session.getAttribute("user_name_surname") == null) {
-			setSessionVariables("user_name_surname", loggedUser.getUser_name() + " " + loggedUser.getUser_surname(),session);
-			setSessionVariables("user_email", loggedUser.getUser_email(), session);
-			setSessionVariables("user_gender_name", loggedUser.getGender().getGender_name(), session);
+			session.setAttribute("user_name_surname", loggedUser.getUser_name() + " " + loggedUser.getUser_surname());
+			session.setAttribute("user_email", loggedUser.getUser_email());
+			session.setAttribute("user_gender_name", loggedUser.getGender().getGender_name());
 		}
 
 		return "index";
@@ -171,7 +171,7 @@ public class IndexController extends HelperController {
 	}
 	
 	@PostMapping("/edituser")
-	public String saveEditedUserData(@ModelAttribute("user") @Validated User user, BindingResult result, RedirectAttributes redirectAttributes) {
+	public String saveEditedUserData(@ModelAttribute("user") @Validated User user, BindingResult result, RedirectAttributes redirectAttributes, HttpSession session) {
 		
 		if(result.hasErrors()) {
 			return "edituserform";
@@ -180,6 +180,8 @@ public class IndexController extends HelperController {
 		user.setUser_password(PasswordEncoder.encodePassword(user.getUser_password()));
 		userService.updateUser(user);
 		
+		session.setAttribute("user_edit", true);
+		
 		redirectAttributes.addFlashAttribute("success", true);
 		
 		return "redirect:/edituser/" + user.getUser_jwt_helper();
@@ -187,7 +189,7 @@ public class IndexController extends HelperController {
 	
 	@PostMapping("/deleteuser")
 	@ResponseBody
-	public String removeUser(@RequestParam("jwt_user_id") String jwtUserId) {
+	public String ajaxRemoveUser(@RequestParam("jwt_user_id") String jwtUserId) {
 		Integer userId = JwtHelper.decodeJWT(jwtUserId);
 		
 		if(userId > 0) {
@@ -201,7 +203,7 @@ public class IndexController extends HelperController {
 	
 	@PostMapping(value = "/userdetails" , produces = MediaType.APPLICATION_JSON_VALUE )
 	@ResponseBody
-	public User userDetails(@RequestParam("jwt_user_id") String jwtUserId) {
+	public User ajaxUserDetails(@RequestParam("jwt_user_id") String jwtUserId) {
 		
 		  //removing prefix "info_" 
 		  jwtUserId = jwtUserId.substring(5);

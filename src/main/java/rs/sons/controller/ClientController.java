@@ -30,7 +30,7 @@ import rs.sons.validator.NewClientValidator;
 
 @Controller
 @SessionAttributes("clientsession")
-public class ClientController extends HelperController {
+public class ClientController {
 
 	@Autowired
 	NewClientValidator newClientValidator;
@@ -129,7 +129,7 @@ public class ClientController extends HelperController {
 
 	@PostMapping("/deleteclient")
 	@ResponseBody
-	public String removeClient(@RequestParam("jwt_client_id") String jwtClientId) {
+	public String ajaxRemoveClient(@RequestParam("jwt_client_id") String jwtClientId) {
 		Integer clientId = JwtHelper.decodeJWT(jwtClientId);
 
 		if (clientId > 0) {

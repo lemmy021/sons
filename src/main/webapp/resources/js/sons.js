@@ -97,6 +97,10 @@ function createInvoice(invoiceId, deliveryDate = null, paymentDate = null, textM
     }, function () {
 		$.post("/createinvoice", {jwt_invoice_id : invoiceId, payment_date : paymentDate, delivery_date : deliveryDate, action : action}, function(data){
 			if(data == "1"){
+				if(action == 1) {
+					alert("fdfdsfdfdfdsfdsf");
+				}
+				$("#invoice_holder").html("Govno");
 				swal("Done!", successText, "success");
 			}
 		})

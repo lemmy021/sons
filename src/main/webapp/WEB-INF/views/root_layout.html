@@ -78,13 +78,110 @@
         <div class="container-fluid">
             <div class="navbar-header">
                 <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
-                <a href="javascript:void(0);" class="bars"></a>
+                <!-- <a href="javascript:void(0);" class="bars"></a> -->
                 <a class="navbar-brand" href="../../index.html">ADMINBSB - MATERIAL DESIGN</a>
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Call Search -->
+                    <!-- <li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="material-icons">search</i></a></li> -->
+<!--                     <li th:each="element : ${weather}">
+                    	<span th:text="${element.value}"></span>
+                    </li>
+ -->                    
+                    <li class="dropdown">
+						<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">
+							<img src="https://img.icons8.com/ultraviolet/24/000000/thermometer-automation.png">
+						</a>
+						<ul class="dropdown-menu">
+							<li class="header">
+								WEATHER
+								<div>
+									<p style="margin: 0 0 1px;">
+										<span style="color: #aaa; font-size: 11px;" th:text="${'Last update: ' + weather.last_update}">Last update: 22.12.2019. 11:11:35</span>
+									</p>
+								</div>
+							</li>
+							<li class="body">
+								<div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 306px;">
+									<ul class="menu" style="overflow: hidden; width: auto; height: 306x;">
+										<li>
+											<a href="javascript:void(0);" class=" waves-effect waves-block cursor-default">
+												<div class="icon-circle bg-teal">
+													<i class="material-icons">place</i>
+												</div>
+												<div class="menu-info">
+													<h4>Place</h4>
+													<p>Novi Sad</p>
+												</div>
+											</a>
+										</li>
+										<li>
+											<a href="javascript:void(0);" class=" waves-effect waves-block cursor-default">
+												<div class="icon-circle bg-yellow">
+													<i class="material-icons">wb_sunny</i>
+												</div>
+												<div class="menu-info">
+													<h4>Temperature</h4>
+													<p th:text="${weather.temp + ' &deg;C'}">6 &#x2103;</p>
+												</div>
+											</a>
+										</li>
+										<li>
+											<a href="javascript:void(0);" class=" waves-effect waves-block cursor-default">
+												<div class="icon-circle bg-orange">
+													<i class="material-icons">looks</i>
+												</div>
+												<div class="menu-info">
+													<h4>Sunrise</h4>
+													<p>
+														<i class="material-icons">access_time</i> <span th:text="${weather.sunrise}">06:10</span>
+													</p>
+												</div>
+											</a>
+										</li>
+										<li>
+											<a href="javascript:void(0);" class=" waves-effect waves-block cursor-default">
+												<div class="icon-circle bg-blue-grey">
+													<i class="material-icons">brightness_4</i>
+												</div>
+												<div class="menu-info">
+													<h4>Sunset</h4>
+													<p>
+														<i class="material-icons">access_time</i> <span th:text="${weather.sunset}">06:10</span>
+													</p>
+												</div>
+											</a>
+										</li>
+										<li>
+											<a href="javascript:void(0);" class=" waves-effect waves-block cursor-default">
+												<div class="icon-circle bg-cyan">
+													<i class="material-icons">grain</i>
+												</div>
+												<div class="menu-info">
+													<h4>Humidity</h4>
+													<p th:text="${weather.humidity + '%'}">98%</p>
+												</div>
+											</a>
+										</li>
+										<li>
+											<a href="javascript:void(0);" class="waves-effect waves-block cursor-default">
+												<div class="icon-circle bg-pink">
+													<i class="material-icons">toys</i>
+												</div>
+												<div class="menu-info">
+													<h4>Wind</h4>
+													<p th:text="${weather.wind} + ' km/h'">9.1 km/h</p>
+												</div>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</li>
+						</ul>
+					</li>
                     <li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="material-icons">search</i></a></li>
+                    
                     <!-- #END# Call Search -->
                 </ul>
             </div>
@@ -97,8 +194,8 @@
             <!-- User Info -->
             <div class="user-info">
                 <div class="image" th:switch="${session.user_gender_name}">
-                    <img th:case="male" th:src="@{/resources/images/male.png}" width="48" height="48" alt="User" />
-                    <img th:case="female" th:src="@{/resources/images/female.png}" width="48" height="48" alt="User" />
+                    <img th:case="Male" th:src="@{/resources/images/male.png}" width="48" height="48" alt="User" />
+                    <img th:case="Female" th:src="@{/resources/images/female.png}" width="48" height="48" alt="User" />
                 </div>
                 <div class="info-container">
                     <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span th:text="${session.user_name_surname}" th:unless="${session == null}"/></div>
@@ -118,7 +215,7 @@
             <div class="menu">
                 <ul class="list">
                     <li class="header">MAIN NAVIGATION</li>
-                    <li>
+                    <!-- <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">people</i>
                             <span>Users</span>
@@ -143,6 +240,17 @@
                             </li>
                             <li>
                                 <a href="/clients">List of clients</a>
+                            </li>
+                        </ul>
+                    </li> -->
+                    <li th:each="menu : ${menuall}" th:class="${menu.menu_css_active}? active : ''">
+                    	<a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons" th:text="${menu.menu_icon}">icon</i>
+                            <span th:text="${menu.menu_name}">Users</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li th:each="item : ${menu.menuItems}">
+                                <a th:href="${item.menu_item_url}" th:text="${item.menu_item_name}" th:class="${item.menu_item_css_active}? activesubmeni : ''">Add client</a>
                             </li>
                         </ul>
                     </li>

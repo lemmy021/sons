@@ -7,6 +7,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 
 import rs.sons.entity.Client;
@@ -19,8 +22,15 @@ public class ClientDaoImpl implements ClientDao {
 	EntityManager em;
 
 	@SuppressWarnings("unchecked")
+	@Cacheable("clients")
 	public List<Client> findAllClients() {
 		return em.createNamedQuery("Client.findAllClients").getResultList();
+	}
+	
+	@CacheEvict(allEntries = true, cacheNames = { "clients" })
+	@Scheduled(fixedDelay = 300000)
+	public void cacheEvict() {
+		System.out.println("odradio skedjuler");
 	}
 
 	public void saveClient(Client client) {

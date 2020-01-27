@@ -30,6 +30,7 @@
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+	
 	<!-- end spring security -->
 
 	<!-- <filter>

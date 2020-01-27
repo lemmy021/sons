@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class MyDateFormatter {
 
@@ -58,10 +59,10 @@ public class MyDateFormatter {
 	
 	public static Date dateFormatDash(String date) {
 		
-		Date newDate;
+		date = date.substring(0, 10).replace(".", "-");
 		
 		try {
-			newDate = new SimpleDateFormat("dd.MM.yyyy.").parse(date);
+			Date newDate = new SimpleDateFormat("dd-MM-yyyy").parse(date);
 			return dateFormat.parse(dateFormat.format(newDate));
 		} catch (ParseException e) {
 			return null;
@@ -73,7 +74,7 @@ public class MyDateFormatter {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		
-		return cal.get(Calendar.MONTH);
+		return cal.get(Calendar.MONTH) + 1;
 	}
 	
 	public static int getYearFromDate(Date date) {
@@ -81,5 +82,16 @@ public class MyDateFormatter {
 		cal.setTime(date);
 		
 		return cal.get(Calendar.YEAR);
+	}
+	
+	public static String unixTimestampToDate(Long unixSeconds) {
+		Date date = new Date(unixSeconds*1000L); 
+	   // format of the date
+	   //SimpleDateFormat jdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	   SimpleDateFormat jdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm:ss");
+	   jdf.setTimeZone(TimeZone.getTimeZone("GMT+1"));
+	   String java_date = jdf.format(date);
+	   
+	   return java_date;
 	}
 }

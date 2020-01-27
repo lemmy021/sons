@@ -27,4 +27,7 @@ public interface ClientDao {
 	public Client findClientByPIBForEdit(int clientId, String pib);
 	
 	public Client findClientByIdentificationNumberForEdit(int clientId, String identification_number);
+	
+	public void cacheEvict();
+	
 }

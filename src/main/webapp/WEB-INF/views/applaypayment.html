@@ -21,8 +21,8 @@
 		<div class="block-header">
 			<h2>
 				<span th:switch="${invoice.invoice_is_invoice}">
-					<span class="font-bold" th:case="true" th:text="@{Invoice} + ' ' + ${document_number}"> | Invoice</span>
-					<span class="font-bold" th:case="false" th:text="@{Pre-Invoice} + ' ' + ${document_number}"> | Pre-Invoice</span>
+					<span class="font-bold" th:case="true" th:text="@{Invoice} + ' ' + ${document_number}" id="invoice_holder"></span>
+					<span class="font-bold" th:case="false" th:text="@{Pre-Invoice} + ' ' + ${document_number}" id="invoice_holder"></span>
 				</span>
 				<small>List of document items</small>
 			</h2>
@@ -79,7 +79,7 @@
 									</div>
 									<span class="input-group-addon"> <i	class="material-icons">date_range</i></span>
 								</div>
-								<button class="btn bg-teal btn-block waves-effect" type="button" th:if="${invoice.invoice_is_invoice}" disabled="disabled">26.12.2019.</button>
+								<button class="btn bg-teal btn-block waves-effect" type="button" th:if="${invoice.invoice_is_invoice}" disabled="disabled" th:text="${#dates.format(invoice.invoice_delivery_date, 'dd.MM.yyyy.')}"></button>
 							</div>
 							<div class="col-xs-3">
 								<h2 class="card-inside-title">Payment date</h2>
@@ -89,7 +89,7 @@
 									</div>
 									<span class="input-group-addon"> <i	class="material-icons">date_range</i></span>
 								</div>
-								<button class="btn bg-teal btn-block waves-effect" type="button" th:if="${invoice.invoice_payed}" disabled="disabled">26.12.2019.</button>
+								<button class="btn bg-teal btn-block waves-effect" type="button" th:if="${invoice.invoice_payed}" disabled="disabled" th:text="${#dates.format(invoice.invoice_payment_date_for_print, 'dd.MM.yyyy.')}"></button>
 							</div>
 							<div class="col-xs-6">
 								<h2 class="card-inside-title">Invoice option(s)</h2>

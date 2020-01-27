@@ -17,5 +17,9 @@ public class MenuServiceImpl implements MenuService {
 	public List<Menu> getLeftMenuItems() {
 		return menuDao.getLeftMenuItems();
 	}
+	
+	public boolean UrlExistsInMenuItemTable(String url) {
+		return menuDao.UrlExistsInMenuItemTable(url);
+	}
 
 }

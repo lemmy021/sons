@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:task="http://www.springframework.org/schema/task"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:cache="http://www.springframework.org/schema/cache"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
-		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/cache https://www.springframework.org/schema/cache/spring-cache.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd">
 
 
 	<!-- ovde skeniram celu aplikaciju sem kontrolera - to je praksa -->
@@ -66,6 +71,22 @@
 	<!-- <bean id="persistenceExceptionTranslationPostProcessor" class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" 
 		/> -->
 
+	<!-- https://docs.spring.io/spring/docs/current/spring-framework-reference/integration.html#cache-jsr-107 -->
+	<!-- enable-ujem cache -->
+	<cache:annotation-driven/>
+	
+	<!-- enable-ovanje taskova -->
+	<task:annotation-driven/>
+		
+	<bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+	    <property name="caches">
+	        <set>
+	            <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean" name="clients"/>
+	            <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean" name="weather"/>
+	        </set>
+	    </property>
+	</bean>
+	
 	<import resource="security.xml" />
 
 </beans>

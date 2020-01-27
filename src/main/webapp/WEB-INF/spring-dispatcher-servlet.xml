@@ -40,6 +40,13 @@
 			<property name="useCacheControlHeader" value="true" />
 			<property name="useCacheControlNoStore" value="true" />
 		</bean>
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/resources/**"/>
+			<bean id="AclInterceptor" class="rs.sons.interceptor.AclInterceptor"/>
+		</mvc:interceptor>
+		
     </mvc:interceptors>
     
 </beans>

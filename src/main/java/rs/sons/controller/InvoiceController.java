@@ -119,7 +119,7 @@ public class InvoiceController {
 	
 	@PostMapping("/sendinvoice")
 	@ResponseBody
-	public String sendInvoicePdfOnEmail(HttpServletRequest request, @RequestParam("jwt_invoice_id") String jwtInvoiceId) throws IOException, MessagingException {
+	public String ajaxSendInvoicePdfOnEmail(HttpServletRequest request, @RequestParam("jwt_invoice_id") String jwtInvoiceId) throws IOException, MessagingException {
 		Integer invoiceId = JwtHelper.decodeJWT(jwtInvoiceId);
 		
 		if(invoiceId > 0) {
@@ -156,7 +156,7 @@ public class InvoiceController {
 	
 	@PostMapping("/deleteinvoice")
 	@ResponseBody
-	public String deleteInvoice(@RequestParam("jwt_invoice_id") String jwtInvoiceId) {
+	public String ajaxDeleteInvoice(@RequestParam("jwt_invoice_id") String jwtInvoiceId) {
 		
 		Integer invoiceId = JwtHelper.decodeJWT(jwtInvoiceId);
 		
@@ -197,7 +197,7 @@ public class InvoiceController {
 	
 	@PostMapping("/createinvoice")
 	@ResponseBody
-	public String createInvoice(@RequestParam Map<String, String> allParams, Principal principal) {
+	public String ajaxCreateInvoice(@RequestParam Map<String, String> allParams, Principal principal) {
 		
 		try {
 			Date date = new SimpleDateFormat("dd.MM.yyyy.").parse(allParams.get("payment_date"));

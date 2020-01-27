@@ -7,4 +7,6 @@ import rs.sons.entity.Menu;
 public interface MenuDao {
 
 	public List<Menu> getLeftMenuItems();
+	
+	public boolean UrlExistsInMenuItemTable(String url);
 }
