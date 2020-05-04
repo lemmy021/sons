@@ -1,5 +1,5 @@
 #
-#Mon Jan 27 13:49:03 CET 2020
+#Mon May 04 19:14:58 CEST 2020
 rs.sons.dao.WeatherDaoImpl=org.springframework.stereotype.Component
 rs.sons.controller.InvoiceController=org.springframework.stereotype.Component
 rs.sons.service.RoleServiceImpl=org.springframework.stereotype.Component
