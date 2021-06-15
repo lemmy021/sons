@@ -365,7 +365,7 @@
 		<spring.security.version>5.2.1.RELEASE</spring.security.version>
 		<jackson.version>2.10.1</jackson.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<apache.pdfbox.versio>2.0.17</apache.pdfbox.versio>
+		<apache.pdfbox.versio>2.0.24</apache.pdfbox.versio>
 		<thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
 		<lombok.version>1.18.10</lombok.version>
 		<mysql.connector.version>8.0.18</mysql.connector.version>
