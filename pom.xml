@@ -368,7 +368,7 @@
 		<apache.pdfbox.versio>2.0.17</apache.pdfbox.versio>
 		<thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
 		<lombok.version>1.18.10</lombok.version>
-		<mysql.connector.version>8.0.18</mysql.connector.version>
+		<mysql.connector.version>8.0.28</mysql.connector.version>
 	</properties>
 
 </project>
