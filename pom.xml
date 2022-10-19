@@ -363,7 +363,7 @@
 		<org.springframework.version>5.2.1.RELEASE</org.springframework.version> <!-- wanted Spring version -->
 		<!-- <apache.tiles>3.0.8</apache.tiles> -->
 		<spring.security.version>5.2.1.RELEASE</spring.security.version>
-		<jackson.version>2.10.1</jackson.version>
+		<jackson.version>2.13.4.1</jackson.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<apache.pdfbox.versio>2.0.17</apache.pdfbox.versio>
 		<thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
